@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Declaração de Amor</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="heart-background"></div>
+
+<header>
+  <h1>Crie sua Declaração de Amor 💖</h1>
+</header>
+
+<main class="main-container">
+  <!-- Formulário passo a passo -->
+  <section class="form-section">
+    <div class="form-step" data-step="1">
+      <label>Para: <input type="text" id="toName" placeholder="Nome do destinatário"></label>
+      <button type="button" class="next-btn">Próximo</button>
+    </div>
+
+    <div class="form-step" data-step="2">
+      <label>De: <input type="text" id="fromName" placeholder="Seu nome"></label>
+      <button type="button" class="next-btn">Próximo</button>
+    </div>
+
+    <div class="form-step" data-step="3">
+      <label>Data inicial: <input type="date" id="startDate"></label>
+      <button type="button" class="next-btn">Próximo</button>
+    </div>
+
+    <div class="form-step" data-step="4">
+      <label>Mensagem: <textarea id="message" placeholder="Sua declaração"></textarea></label>
+      <button type="button" class="next-btn">Próximo</button>
+    </div>
+
+    <div class="form-step" data-step="5">
+      <label>Música do YouTube (somente áudio): <input type="text" id="youtubeUrl" placeholder="URL da música"></label>
+      <button type="button" class="next-btn">Próximo</button>
+    </div>
+
+    <div class="form-step" data-step="6">
+      <label>Fotos (até 5): <input type="file" id="photos" accept="image/*" multiple></label>
+      <button type="button" class="next-btn">Finalizar</button>
+    </div>
+
+    <!-- Emotes configuráveis -->
+    <div class="emote-controls">
+      <label>Escolha o emote:</label>
+      <div class="emote-picker">
+        <input type="text" id="emoteInput" value="❤️" readonly>
+        <div class="emote-options">
+          <span>❤️</span><span>💖</span><span>💘</span><span>💝</span><span>💞</span><span>💕</span>
+          <span>💓</span><span>💗</span><span>💟</span><span>❣️</span><span>💜</span><span>🧡</span>
+          <span>💛</span><span>💚</span><span>💙</span><span>🤍</span><span>🖤</span>
+          <span>😘</span><span>😍</span><span>🥰</span><span>😻</span><span>💌</span><span>💏</span>
+          <span>💑</span><span>💍</span><span>🌹</span><span>💐</span>
+        </div>
+      </div>
+      <label>Quantidade:
+        <select id="emoteAmount">
+          <option value="5">Pouco</option>
+          <option value="15" selected>Médio</option>
+          <option value="30">Muito</option>
+        </select>
+      </label>
+      <button id="updateEmotesBtn">Atualizar</button>
+    </div>
+  </section>
+
+  <!-- Prévia estilo cartão -->
+  <section class="preview-section">
+    <div class="card">
+      <h2 id="pTo">Para: (nome)</h2>
+      <div class="slides-wrapper">
+        <div id="slidesContainer"></div>
+      </div>
+      <p id="pMessage">(Sua declaração aparecerá aqui)</p>
+      <h3 id="pFrom">De: (seu nome)</h3>
+      <div class="timer" id="timer">0a 0m 0d 00:00:00</div>
+    </div>
+  </section>
+</main>
+
+<!-- Player de música -->
+<div id="musicPopup" class="music-popup">
+  <span id="musicTitle">(nome da música)</span>
+  <button id="playPauseBtn">Pause</button>
+</div>
+
+<script src="node.js"></script>
+</body>
+</html>
