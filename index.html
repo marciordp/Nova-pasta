@@ -15,38 +15,57 @@
 </header>
 
 <main class="main-container">
+  <!-- Formulário passo a passo -->
   <section class="form-section">
-    <div class="form-step" data-step="1">
+    <div class="form-step" data-step="0">
       <label>Para: <input type="text" id="toName" placeholder="Nome do destinatário"></label>
-      <button type="button" class="next-btn">Próximo</button>
+      <div class="step-buttons">
+        <button type="button" class="prev-btn" style="display:none;">Anterior</button>
+        <button type="button" class="next-btn">Próximo</button>
+      </div>
+    </div>
+
+    <div class="form-step" data-step="1">
+      <label>De: <input type="text" id="fromName" placeholder="Seu nome"></label>
+      <div class="step-buttons">
+        <button type="button" class="prev-btn">Anterior</button>
+        <button type="button" class="next-btn">Próximo</button>
+      </div>
     </div>
 
     <div class="form-step" data-step="2">
-      <label>De: <input type="text" id="fromName" placeholder="Seu nome"></label>
-      <button type="button" class="next-btn">Próximo</button>
+      <label>Data inicial: <input type="date" id="startDate"></label>
+      <div class="step-buttons">
+        <button type="button" class="prev-btn">Anterior</button>
+        <button type="button" class="next-btn">Próximo</button>
+      </div>
     </div>
 
     <div class="form-step" data-step="3">
-      <label>Data inicial: <input type="date" id="startDate"></label>
-      <button type="button" class="next-btn">Próximo</button>
+      <label>Mensagem: <textarea id="message" placeholder="Sua declaração"></textarea></label>
+      <div class="step-buttons">
+        <button type="button" class="prev-btn">Anterior</button>
+        <button type="button" class="next-btn">Próximo</button>
+      </div>
     </div>
 
     <div class="form-step" data-step="4">
-      <label>Mensagem: <textarea id="message" placeholder="Sua declaração"></textarea></label>
-      <button type="button" class="next-btn">Próximo</button>
+      <label>Música do YouTube (somente áudio): <input type="text" id="youtubeUrl" placeholder="URL da música"></label>
+      <div class="step-buttons">
+        <button type="button" class="prev-btn">Anterior</button>
+        <button type="button" class="next-btn">Próximo</button>
+      </div>
     </div>
 
     <div class="form-step" data-step="5">
-      <label>Música do YouTube (somente áudio): <input type="text" id="youtubeUrl" placeholder="URL da música"></label>
-      <button type="button" class="next-btn">Próximo</button>
-    </div>
-
-    <div class="form-step" data-step="6">
       <label>Fotos (até 5): <input type="file" id="photos" accept="image/*" multiple></label>
-      <button type="button" class="next-btn">Finalizar</button>
+      <div class="step-buttons">
+        <button type="button" class="prev-btn">Anterior</button>
+        <button type="button" class="finish-btn">Finalizar</button>
+      </div>
     </div>
 
-    <!-- Emotes configuráveis -->
+    <!-- Emotes -->
     <div class="emote-controls">
       <label>Escolha o emote:</label>
       <div class="emote-picker">
@@ -55,8 +74,8 @@
           <span>❤️</span><span>💖</span><span>💘</span><span>💝</span><span>💞</span><span>💕</span>
           <span>💓</span><span>💗</span><span>💟</span><span>❣️</span><span>💜</span><span>🧡</span>
           <span>💛</span><span>💚</span><span>💙</span><span>🤍</span><span>🖤</span>
-          <span>😘</span><span>😍</span><span>🥰</span><span>😻</span><span>💌</span><span>💏</span>
-          <span>💑</span><span>💍</span><span>🌹</span><span>💐</span>
+          <span>😘</span><span>😍</span><span>🥰</span><span>😻</span><span>💌</span>
+          <span>💏</span><span>💑</span><span>💍</span><span>🌹</span><span>💐</span>
         </div>
       </div>
       <label>Quantidade:
@@ -70,7 +89,7 @@
     </div>
   </section>
 
-  <!-- Prévia estilo cartão -->
+  <!-- Preview -->
   <section class="preview-section">
     <div class="card">
       <h2 id="pTo">Para: (nome)</h2>
@@ -84,11 +103,14 @@
   </section>
 </main>
 
-<!-- Player de música -->
+<!-- Música -->
 <div id="musicPopup" class="music-popup">
+  <img id="musicThumb" src="" alt="Thumbnail" width="60" height="60">
   <span id="musicTitle">(nome da música)</span>
   <button id="playPauseBtn">Pause</button>
 </div>
+
+<div id="youtubePlayer" style="display:none;"></div>
 
 <script src="node.js"></script>
 </body>

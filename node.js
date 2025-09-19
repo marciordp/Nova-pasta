@@ -1,204 +1,245 @@
-// ===== WIZARD FORM =====
-const formSteps = document.querySelectorAll(".form-step")
+// === JS COMPLETO ===
+
+// PASSO A PASSO
+const steps = document.querySelectorAll(".form-step")
+const nextBtns = document.querySelectorAll(".next-btn")
+const prevBtns = document.querySelectorAll(".prev-btn")
+const finishBtn = document.querySelector(".finish-btn")
 let currentStep = 0
-function showStep(index) {
-  formSteps.forEach((step, i) => step.classList.toggle("active", i === index))
+function showStep(step) {
+  steps.forEach((s, i) => {
+    s.classList.toggle("active", i === step)
+    const prev = s.querySelector(".prev-btn")
+    if (prev) prev.style.display = step === 0 ? "none" : "inline-block"
+  })
 }
 showStep(currentStep)
-document.querySelectorAll(".next-btn").forEach((btn) => {
+nextBtns.forEach((btn) =>
   btn.addEventListener("click", () => {
-    if (currentStep < formSteps.length - 1) {
+    if (currentStep < steps.length - 1) {
       currentStep++
       showStep(currentStep)
+      updatePreview()
     }
   })
-})
-
-// ===== PREVIEW =====
-const toEl = document.getElementById("toName")
-const fromEl = document.getElementById("fromName")
-const messageEl = document.getElementById("message")
-const dateEl = document.getElementById("startDate")
-const previewTo = document.getElementById("pTo")
-const previewFrom = document.getElementById("pFrom")
-const previewMessage = document.getElementById("pMessage")
-const timerEl = document.getElementById("timer")
-
-function updatePreview() {
-  previewTo.textContent = toEl.value || "(nome)"
-  previewFrom.textContent = fromEl.value || "(seu nome)"
-  previewMessage.textContent =
-    messageEl.value || "(Sua declaração aparecerá aqui)"
-}
-;[toEl, fromEl, messageEl, dateEl].forEach((el) =>
-  el.addEventListener("input", updatePreview)
 )
-updatePreview()
+prevBtns.forEach((btn) =>
+  btn.addEventListener("click", () => {
+    if (currentStep > 0) {
+      currentStep--
+      showStep(currentStep)
+      updatePreview()
+    }
+  })
+)
 
-// ===== SLIDESHOW =====
-const photosEl = document.getElementById("photos")
+// PREVIEW
+const pTo = document.getElementById("pTo")
+const pFrom = document.getElementById("pFrom")
+const pMessage = document.getElementById("pMessage")
+const toNameInput = document.getElementById("toName")
+const fromNameInput = document.getElementById("fromName")
+const messageInput = document.getElementById("message")
+function updatePreview() {
+  pTo.textContent = "Para: " + (toNameInput.value || "(nome)")
+  pFrom.textContent = "De: " + (fromNameInput.value || "(seu nome)")
+  pMessage.textContent = messageInput.value || "(Sua declaração aparecerá aqui)"
+}
+toNameInput.addEventListener("input", updatePreview)
+fromNameInput.addEventListener("input", updatePreview)
+messageInput.addEventListener("input", updatePreview)
+
+// SLIDES
 const slidesContainer = document.getElementById("slidesContainer")
 let slideUrls = [],
   slideIndex = 0,
-  slideshowInterval = null
-
-photosEl.addEventListener("change", () => {
-  const files = Array.from(photosEl.files).slice(0, 5)
-  slideUrls = files.map((f) => URL.createObjectURL(f))
+  slideshowInterval
+document.getElementById("photos").addEventListener("change", (e) => {
+  slideUrls = Array.from(e.target.files).map((f) => URL.createObjectURL(f))
+  renderSlides()
+})
+function renderSlides() {
   slidesContainer.innerHTML = ""
-  slideUrls.forEach((src) => {
+  slideUrls.forEach((url) => {
     const img = document.createElement("img")
-    img.src = src
+    img.src = url
     slidesContainer.appendChild(img)
   })
-  slideIndex = 0
   if (slideshowInterval) clearInterval(slideshowInterval)
-  if (slideUrls.length > 1)
+  if (slideUrls.length > 1) {
+    slideIndex = 0
     slideshowInterval = setInterval(() => {
       slideIndex = (slideIndex + 1) % slideUrls.length
       slidesContainer.style.transform = `translateX(${
         -slideIndex * (100 / slideUrls.length)
       }%)`
     }, 1500)
-})
-
-// ===== TIMER =====
-let startDate = null,
-  timerInterval = null
-dateEl.addEventListener("input", () => {
-  if (!dateEl.value) {
-    timerEl.textContent = "0a 0m 0d 00:00:00"
-    return
   }
-  startDate = new Date(dateEl.value + "T00:00:00")
-  if (timerInterval) clearInterval(timerInterval)
-  updateTimer()
-  timerInterval = setInterval(updateTimer, 1000)
-})
-function updateTimer() {
-  if (!startDate) {
-    timerEl.textContent = "0a 0m 0d 00:00:00"
-    return
-  }
-  let now = new Date()
-  if (now < startDate) now = startDate
-  let years = now.getFullYear() - startDate.getFullYear()
-  let months = now.getMonth() - startDate.getMonth()
-  let days = now.getDate() - startDate.getDate()
-  let hours = now.getHours() - startDate.getHours()
-  let minutes = now.getMinutes() - startDate.getMinutes()
-  let seconds = now.getSeconds() - startDate.getSeconds()
-  if (seconds < 0) {
-    seconds += 60
-    minutes--
-  }
-  if (minutes < 0) {
-    minutes += 60
-    hours--
-  }
-  if (hours < 0) {
-    hours += 24
-    days--
-  }
-  if (days < 0) {
-    days += new Date(now.getFullYear(), now.getMonth(), 0).getDate()
-    months--
-  }
-  if (months < 0) {
-    months += 12
-    years--
-  }
-  timerEl.textContent = `${years}a ${months}m ${days}d ${String(hours).padStart(
-    2,
-    "0"
-  )}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
 }
 
-// ===== EMOTES =====
-const emoteInputField = document.getElementById("emoteInput")
+// TIMER
+const timerEl = document.getElementById("timer")
+const startDateInput = document.getElementById("startDate")
+function updateTimer() {
+  const startDate = new Date(startDateInput.value)
+  if (isNaN(startDate)) return
+  const now = new Date()
+  let diff = startDate - now
+  if (diff < 0) diff = 0
+  const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365))
+  const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30)) % 12
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24)) % 30
+  const hours = Math.floor(diff / (1000 * 60 * 60)) % 24
+  const minutes = Math.floor(diff / (1000 * 60)) % 60
+  const seconds = Math.floor(diff / 1000) % 60
+  timerEl.textContent = `${years}a ${months}m ${days}d ${hours
+    .toString()
+    .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`
+}
+
+// EMOTES
+let emotes = []
+const emoteInput = document.getElementById("emoteInput")
 const emoteOptions = document.querySelector(".emote-options")
 const emoteAmount = document.getElementById("emoteAmount")
 const updateEmotesBtn = document.getElementById("updateEmotesBtn")
-const heartBackground = document.querySelector(".heart-background")
-
-let currentEmote = "❤️",
-  emoteCount = Number(emoteAmount.value),
-  emoteInterval = null
-
-function createEmote() {
-  const span = document.createElement("span")
-  span.textContent = currentEmote
-  span.style.position = "absolute"
-  span.style.left = Math.random() * 100 + "vw"
-  span.style.top = Math.random() * 100 + "vh"
-  span.style.fontSize = 10 + Math.random() * 20 + "px"
-  span.style.opacity = Math.random() * 0.7 + 0.3
-  heartBackground.appendChild(span)
-  const duration = 5 + Math.random() * 5
-  span.animate(
-    [
-      { transform: "translateY(0) rotate(0deg)", opacity: span.style.opacity },
-      { transform: "translateY(-120vh) rotate(360deg)", opacity: 0 },
-    ],
-    { duration: duration * 1000, easing: "linear" }
-  )
-  setTimeout(() => span.remove(), duration * 1000)
-}
-
-function startEmotes() {
-  if (emoteInterval) clearInterval(emoteInterval)
-  emoteInterval = setInterval(() => {
-    for (let i = 0; i < emoteCount; i++) createEmote()
-  }, 500)
-}
-updateEmotesBtn.addEventListener("click", () => {
-  currentEmote = emoteInputField.value || "❤️"
-  emoteCount = Number(emoteAmount.value) || 5
-  startEmotes()
-})
-startEmotes()
-
-emoteInputField.addEventListener("click", () => {
-  emoteOptions.style.display =
-    emoteOptions.style.display === "flex" ? "none" : "flex"
-})
+emoteInput.addEventListener(
+  "click",
+  () => (emoteOptions.style.display = "flex")
+)
 emoteOptions.querySelectorAll("span").forEach((span) => {
   span.addEventListener("click", () => {
-    emoteInputField.value = span.textContent
-    currentEmote = span.textContent
+    emoteInput.value = span.textContent
     emoteOptions.style.display = "none"
-    startEmotes()
+    updateEmotes()
   })
 })
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".emote-picker")) emoteOptions.style.display = "none"
-})
+updateEmotesBtn.addEventListener("click", updateEmotes)
+function updateEmotes() {
+  emotes.forEach((e) => e.remove())
+  emotes = []
+  const amount = parseInt(emoteAmount.value)
+  const selected = emoteInput.value
+  for (let i = 0; i < amount; i++) {
+    const span = document.createElement("span")
+    span.textContent = selected
+    span.style.position = "absolute"
+    span.style.top = Math.random() * 80 + "%"
+    span.style.left = Math.random() * 90 + "%"
+    span.style.fontSize = 12 + Math.random() * 16 + "px"
+    span.style.opacity = 0.7
+    span.style.pointerEvents = "none"
+    document.querySelector(".card").appendChild(span)
+    emotes.push(span)
+    animateEmote(span)
+  }
+}
+function animateEmote(el) {
+  let y = 0
+  function move() {
+    y -= 0.3 + Math.random() * 0.5
+    el.style.transform = `translateY(${y}px)`
+    if (y < -window.innerHeight) y = window.innerHeight
+    requestAnimationFrame(move)
+  }
+  move()
+}
 
-// ===== MÚSICA =====
-const ytEl = document.getElementById("youtubeUrl")
+// YOUTUBE
+let ytPlayer,
+  isPlaying = false
+let tag = document.createElement("script")
+tag.src = "https://www.youtube.com/iframe_api"
+document.body.appendChild(tag)
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player("youtubePlayer", {
+    height: "0",
+    width: "0",
+    videoId: "",
+    playerVars: {
+      autoplay: 1,
+      loop: 1,
+      playlist: "",
+      controls: 0,
+      disablekb: 1,
+      modestbranding: 1,
+    },
+    events: { onReady: () => {} },
+  })
+}
+
+// MÚSICA
 const musicPopup = document.getElementById("musicPopup")
 const musicTitle = document.getElementById("musicTitle")
+const musicThumb = document.getElementById("musicThumb")
 const playPauseBtn = document.getElementById("playPauseBtn")
-
-let audio = new Audio()
-let isPlaying = false
-
-ytEl.addEventListener("input", () => {
-  const url = ytEl.value
+const youtubeUrlInput = document.getElementById("youtubeUrl")
+youtubeUrlInput.addEventListener("input", () => {
+  const url = youtubeUrlInput.value
   if (!url) return
+  const videoId = url.split("v=")[1]?.split("&")[0]
+  if (!videoId) return
+  musicThumb.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
   musicTitle.textContent = "Sua música"
-  musicPopup.style.display = "block"
+  musicPopup.style.display = "flex"
+  if (ytPlayer) {
+    ytPlayer.loadVideoById(videoId)
+    ytPlayer.playVideo()
+    isPlaying = true
+    playPauseBtn.textContent = "Pause"
+  }
+})
+playPauseBtn.addEventListener("click", () => {
+  if (!ytPlayer) return
+  if (isPlaying) {
+    ytPlayer.pauseVideo()
+    isPlaying = false
+    playPauseBtn.textContent = "Play"
+  } else {
+    ytPlayer.playVideo()
+    isPlaying = true
+    playPauseBtn.textContent = "Pause"
+  }
 })
 
-playPauseBtn.addEventListener("click", () => {
-  if (!audio.src) return
-  if (isPlaying) {
-    audio.pause()
-    playPauseBtn.textContent = "Play"
-    isPlaying = false
-  } else {
-    audio.play()
-    playPauseBtn.textContent = "Pause"
-    isPlaying = true
+// FINALIZAR
+finishBtn.addEventListener("click", () => {
+  updatePreview()
+  document.querySelector(".form-section").style.display = "none"
+  document.querySelector(".emote-controls").style.display = "none"
+  const preview = document.querySelector(".preview-section")
+  preview.classList.add("fullscreen-preview")
+
+  // Reinicia slideshow
+  if (slideshowInterval) clearInterval(slideshowInterval)
+  if (slideUrls.length > 1) {
+    slideIndex = 0
+    slideshowInterval = setInterval(() => {
+      slideIndex = (slideIndex + 1) % slideUrls.length
+      slidesContainer.style.transform = `translateX(${
+        -slideIndex * (100 / slideUrls.length)
+      }%)`
+    }, 1500)
+  }
+
+  // Reinicia timer
+  updateTimer()
+  setInterval(updateTimer, 1000)
+
+  // Música
+  const url = youtubeUrlInput.value
+  if (url && ytPlayer) {
+    const videoId = url.split("v=")[1]?.split("&")[0]
+    if (videoId) {
+      ytPlayer.loadVideoById(videoId)
+      ytPlayer.playVideo()
+      isPlaying = true
+      musicPopup.style.display = "flex"
+      playPauseBtn.textContent = "Pause"
+      musicThumb.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+      musicTitle.textContent = "Sua música"
+    }
   }
 })
