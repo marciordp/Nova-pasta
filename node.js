@@ -1,4 +1,4 @@
-// === JS COMPLETO ===
+// === JS COMPLETO ATUALIZADO ===
 
 // PASSO A PASSO
 const steps = document.querySelectorAll(".form-step")
@@ -6,6 +6,7 @@ const nextBtns = document.querySelectorAll(".next-btn")
 const prevBtns = document.querySelectorAll(".prev-btn")
 const finishBtn = document.querySelector(".finish-btn")
 let currentStep = 0
+
 function showStep(step) {
   steps.forEach((s, i) => {
     s.classList.toggle("active", i === step)
@@ -14,6 +15,7 @@ function showStep(step) {
   })
 }
 showStep(currentStep)
+
 nextBtns.forEach((btn) =>
   btn.addEventListener("click", () => {
     if (currentStep < steps.length - 1) {
@@ -40,11 +42,13 @@ const pMessage = document.getElementById("pMessage")
 const toNameInput = document.getElementById("toName")
 const fromNameInput = document.getElementById("fromName")
 const messageInput = document.getElementById("message")
+
 function updatePreview() {
   pTo.textContent = "Para: " + (toNameInput.value || "(nome)")
   pFrom.textContent = "De: " + (fromNameInput.value || "(seu nome)")
   pMessage.textContent = messageInput.value || "(Sua declaração aparecerá aqui)"
 }
+
 toNameInput.addEventListener("input", updatePreview)
 fromNameInput.addEventListener("input", updatePreview)
 messageInput.addEventListener("input", updatePreview)
@@ -54,10 +58,14 @@ const slidesContainer = document.getElementById("slidesContainer")
 let slideUrls = [],
   slideIndex = 0,
   slideshowInterval
+
 document.getElementById("photos").addEventListener("change", (e) => {
-  slideUrls = Array.from(e.target.files).map((f) => URL.createObjectURL(f))
+  slideUrls = Array.from(e.target.files)
+    .slice(0, 5)
+    .map((f) => URL.createObjectURL(f))
   renderSlides()
 })
+
 function renderSlides() {
   slidesContainer.innerHTML = ""
   slideUrls.forEach((url) => {
@@ -77,21 +85,27 @@ function renderSlides() {
   }
 }
 
-// TIMER
+// TIMER (corrigido: conta a partir da data)
 const timerEl = document.getElementById("timer")
 const startDateInput = document.getElementById("startDate")
+let timerInterval
+
 function updateTimer() {
   const startDate = new Date(startDateInput.value)
-  if (isNaN(startDate)) return
+  if (isNaN(startDate)) {
+    timerEl.textContent = "00a 00m 00d 00:00:00"
+    return
+  }
   const now = new Date()
-  let diff = startDate - now
-  if (diff < 0) diff = 0
+  let diff = now - startDate // tempo passado desde a data
+
   const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365))
   const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30)) % 12
   const days = Math.floor(diff / (1000 * 60 * 60 * 24)) % 30
   const hours = Math.floor(diff / (1000 * 60 * 60)) % 24
   const minutes = Math.floor(diff / (1000 * 60)) % 60
   const seconds = Math.floor(diff / 1000) % 60
+
   timerEl.textContent = `${years}a ${months}m ${days}d ${hours
     .toString()
     .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
@@ -99,16 +113,25 @@ function updateTimer() {
     .padStart(2, "0")}`
 }
 
+// Atualiza o timer assim que a data é escolhida
+startDateInput.addEventListener("change", () => {
+  if (timerInterval) clearInterval(timerInterval)
+  updateTimer()
+  timerInterval = setInterval(updateTimer, 1000)
+})
+
 // EMOTES
 let emotes = []
 const emoteInput = document.getElementById("emoteInput")
 const emoteOptions = document.querySelector(".emote-options")
 const emoteAmount = document.getElementById("emoteAmount")
 const updateEmotesBtn = document.getElementById("updateEmotesBtn")
+
 emoteInput.addEventListener(
   "click",
   () => (emoteOptions.style.display = "flex")
 )
+
 emoteOptions.querySelectorAll("span").forEach((span) => {
   span.addEventListener("click", () => {
     emoteInput.value = span.textContent
@@ -116,7 +139,9 @@ emoteOptions.querySelectorAll("span").forEach((span) => {
     updateEmotes()
   })
 })
+
 updateEmotesBtn.addEventListener("click", updateEmotes)
+
 function updateEmotes() {
   emotes.forEach((e) => e.remove())
   emotes = []
@@ -136,6 +161,7 @@ function updateEmotes() {
     animateEmote(span)
   }
 }
+
 function animateEmote(el) {
   let y = 0
   function move() {
@@ -153,6 +179,7 @@ let ytPlayer,
 let tag = document.createElement("script")
 tag.src = "https://www.youtube.com/iframe_api"
 document.body.appendChild(tag)
+
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player("youtubePlayer", {
     height: "0",
@@ -176,6 +203,7 @@ const musicTitle = document.getElementById("musicTitle")
 const musicThumb = document.getElementById("musicThumb")
 const playPauseBtn = document.getElementById("playPauseBtn")
 const youtubeUrlInput = document.getElementById("youtubeUrl")
+
 youtubeUrlInput.addEventListener("input", () => {
   const url = youtubeUrlInput.value
   if (!url) return
@@ -191,6 +219,7 @@ youtubeUrlInput.addEventListener("input", () => {
     playPauseBtn.textContent = "Pause"
   }
 })
+
 playPauseBtn.addEventListener("click", () => {
   if (!ytPlayer) return
   if (isPlaying) {
@@ -226,7 +255,8 @@ finishBtn.addEventListener("click", () => {
 
   // Reinicia timer
   updateTimer()
-  setInterval(updateTimer, 1000)
+  if (timerInterval) clearInterval(timerInterval)
+  timerInterval = setInterval(updateTimer, 1000)
 
   // Música
   const url = youtubeUrlInput.value
