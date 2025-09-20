@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,109 +8,93 @@
 </head>
 <body>
 
-<div class="heart-background"></div>
-
-<header>
-  <h1>Crie sua Declaração de Amor 💖</h1>
-</header>
-
-<main class="main-container">
-  <!-- Formulário passo a passo -->
-  <section class="form-section">
-    <div class="form-step" data-step="0">
-      <label>Para: <input type="text" id="toName" placeholder="Nome do destinatário"></label>
-      <div class="step-buttons">
-        <button type="button" class="prev-btn" style="display:none;">Anterior</button>
-        <button type="button" class="next-btn">Próximo</button>
-      </div>
-    </div>
-
-    <div class="form-step" data-step="1">
-      <label>De: <input type="text" id="fromName" placeholder="Seu nome"></label>
-      <div class="step-buttons">
-        <button type="button" class="prev-btn">Anterior</button>
-        <button type="button" class="next-btn">Próximo</button>
-      </div>
-    </div>
-
-    <div class="form-step" data-step="2">
-      <label>Data inicial: <input type="date" id="startDate"></label>
-      <div class="step-buttons">
-        <button type="button" class="prev-btn">Anterior</button>
-        <button type="button" class="next-btn">Próximo</button>
-      </div>
-    </div>
-
-    <div class="form-step" data-step="3">
-      <label>Mensagem: <textarea id="message" placeholder="Sua declaração"></textarea></label>
-      <div class="step-buttons">
-        <button type="button" class="prev-btn">Anterior</button>
-        <button type="button" class="next-btn">Próximo</button>
-      </div>
-    </div>
-
-    <div class="form-step" data-step="4">
-      <label>Música do YouTube (somente áudio): <input type="text" id="youtubeUrl" placeholder="URL da música"></label>
-      <div class="step-buttons">
-        <button type="button" class="prev-btn">Anterior</button>
-        <button type="button" class="next-btn">Próximo</button>
-      </div>
-    </div>
-
-    <div class="form-step" data-step="5">
-      <label>Fotos (até 5): <input type="file" id="photos" accept="image/*" multiple></label>
-      <div class="step-buttons">
-        <button type="button" class="prev-btn">Anterior</button>
-        <button type="button" class="finish-btn">Finalizar</button>
-      </div>
-    </div>
-
-    <!-- Emotes -->
-    <div class="emote-controls">
-      <label>Escolha o emote:</label>
-      <div class="emote-picker">
-        <input type="text" id="emoteInput" value="❤️" readonly>
-        <div class="emote-options">
-          <span>❤️</span><span>💖</span><span>💘</span><span>💝</span><span>💞</span><span>💕</span>
-          <span>💓</span><span>💗</span><span>💟</span><span>❣️</span><span>💜</span><span>🧡</span>
-          <span>💛</span><span>💚</span><span>💙</span><span>🤍</span><span>🖤</span>
-          <span>😘</span><span>😍</span><span>🥰</span><span>😻</span><span>💌</span>
-          <span>💏</span><span>💑</span><span>💍</span><span>🌹</span><span>💐</span>
-        </div>
-      </div>
-      <label>Quantidade:
-        <select id="emoteAmount">
-          <option value="5">Pouco</option>
-          <option value="15" selected>Médio</option>
-          <option value="30">Muito</option>
-        </select>
-      </label>
-      <button id="updateEmotesBtn">Atualizar</button>
-    </div>
-  </section>
-
-  <!-- Preview -->
-  <section class="preview-section">
-    <div class="card">
-      <h2 id="pTo">Para: (nome)</h2>
-      <div class="slides-wrapper">
-        <div id="slidesContainer"></div>
-      </div>
-      <p id="pMessage">(Sua declaração aparecerá aqui)</p>
-      <h3 id="pFrom">De: (seu nome)</h3>
-      <div class="timer" id="timer">0a 0m 0d 00:00:00</div>
-    </div>
-  </section>
-</main>
-
-<!-- Música -->
-<div id="musicPopup" class="music-popup">
-  <img id="musicThumb" src="" alt="Thumbnail" width="60" height="60">
-  <span id="musicTitle">(nome da música)</span>
-  <button id="playPauseBtn">Pause</button>
+<!-- TELA INICIAL -->
+<div class="landing-wrap" id="landingWrap">
+  <button id="launchBtn">Clique aqui</button>
+  <canvas id="launchParticles"></canvas>
 </div>
 
-<div id="youtubePlayer" style="display:none;"></div>
+<!-- BACKGROUND ESTRELAS -->
+<canvas id="starCanvas"></canvas>
+
+<div class="app-wrap" id="appWrap" style="display:none;">
+  <main class="container">
+    <!-- FORM SIDE -->
+    <section class="form-side">
+      <div class="steps-indicator" id="stepsIndicator">
+        <div class="step-dot">1</div>
+        <div class="step-dot">2</div>
+        <div class="step-dot">3</div>
+        <div class="step-dot">4</div>
+        <div class="step-dot">5</div>
+        <div class="step-dot">6</div>
+      </div>
+      <form id="declarationForm" autocomplete="off">
+        <div class="step active">
+          <label>Seu nome</label>
+          <input id="senderName" type="text" />
+          <div class="btn-group"><button type="button" class="next-btn">Próximo</button></div>
+        </div>
+        <div class="step">
+          <label>Nome da pessoa amada</label>
+          <input id="recipientName" type="text" />
+          <div class="btn-group">
+            <button type="button" class="prev-btn">Anterior</button>
+            <button type="button" class="next-btn">Próximo</button>
+          </div>
+        </div>
+        <div class="step">
+          <label>Declaração</label>
+          <textarea id="message" rows="4"></textarea>
+          <div class="btn-group">
+            <button type="button" class="prev-btn">Anterior</button>
+            <button type="button" class="next-btn">Próximo</button>
+          </div>
+        </div>
+        <div class="step">
+          <label>Data especial (ano-mês-dia)</label>
+          <input id="specialDate" type="date" />
+          <div class="btn-group">
+            <button type="button" class="prev-btn">Anterior</button>
+            <button type="button" class="next-btn">Próximo</button>
+          </div>
+        </div>
+        <div class="step">
+          <label>Fotos (até 5)</label>
+          <input id="photos" type="file" accept="image/*" multiple />
+          <div class="btn-group">
+            <button type="button" class="prev-btn">Anterior</button>
+            <button type="button" class="next-btn">Próximo</button>
+          </div>
+        </div>
+        <div class="step">
+          <label>Link da música (YouTube)</label>
+          <input id="youtubeUrl" type="text" placeholder="https://www.youtube.com/watch?v=..." />
+          <div class="btn-group">
+            <button type="button" class="prev-btn">Anterior</button>
+            <button type="submit" class="finish-btn">Finalizar</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- PREVIEW SIDE -->
+    <section class="preview-side">
+      <div class="card">
+        <h2 id="previewRecipient">Nome da pessoa 💖</h2>
+        <div class="slideshow-box">
+          <div class="slides-wrapper" id="slidesWrapper"></div>
+        </div>
+        <div class="timer-row">
+          <div id="timerText" class="timer-text">00 anos 00 meses 00 dias 00:00:00</div>
+        </div>
+        <p id="previewMessage" class="preview-message">Sua mensagem aparecerá aqui...</p>
+        <p class="preview-from">De: <span id="previewSender">Você</span></p>
+        <div id="previewYoutube" style="margin-top:10px;"></div>
+      </div>
+    </section>
+  </main>
+</div>
 
 <script src="node.js"></script>
 </body>
