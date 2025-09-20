@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* ----- BOTÃO LANÇAMENTO ----- */
+  /* ---------- LANÇAMENTO CINEMATOGRÁFICO ---------- */
   const landingWrap = document.getElementById("landingWrap")
   const launchBtn = document.getElementById("launchBtn")
   const particlesCanvas = document.getElementById("launchParticles")
@@ -12,15 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   const particles = []
-
   function createParticles(x, y) {
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 80; i++) {
+      const angle = Math.random() * Math.PI * 2
+      const speed = Math.random() * 8 + 2
       particles.push({
         x,
         y,
-        vx: (Math.random() - 0.5) * 8,
-        vy: (Math.random() - 0.5) * 8,
-        r: Math.random() * 3 + 1,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        r: Math.random() * 4 + 2,
         alpha: 1,
       })
     }
@@ -43,6 +44,60 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   animateParticles()
 
+  // Warp stars canvas
+  const warpCanvas = document.createElement("canvas")
+  warpCanvas.style.position = "fixed"
+  warpCanvas.style.top = "0"
+  warpCanvas.style.left = "0"
+  warpCanvas.style.width = "100%"
+  warpCanvas.style.height = "100%"
+  warpCanvas.style.zIndex = "9998"
+  warpCanvas.style.pointerEvents = "none"
+  document.body.appendChild(warpCanvas)
+  const wctx = warpCanvas.getContext("2d")
+  let ww = (warpCanvas.width = window.innerWidth)
+  let wh = (warpCanvas.height = window.innerHeight)
+  window.addEventListener("resize", () => {
+    ww = warpCanvas.width = window.innerWidth
+    wh = warpCanvas.height = window.innerHeight
+  })
+
+  const warpStars = []
+  const WARP_COUNT = 200
+  for (let i = 0; i < WARP_COUNT; i++) {
+    warpStars.push({
+      x: Math.random() * ww,
+      y: Math.random() * wh,
+      z: Math.random() * ww,
+      r: Math.random() * 1.2 + 0.5,
+    })
+  }
+
+  let warpActive = false
+  function animateWarp() {
+    if (!warpActive) {
+      requestAnimationFrame(animateWarp)
+      return
+    }
+    wctx.fillStyle = "rgba(11,6,18,0.2)"
+    wctx.fillRect(0, 0, ww, wh)
+    warpStars.forEach((s) => {
+      s.z -= 20
+      if (s.z <= 0) {
+        s.z = ww
+        s.x = Math.random() * ww
+        s.y = Math.random() * wh
+      }
+      const px = (s.x - ww / 2) / ((s.z / ww) * 2) + ww / 2
+      const py = (s.y - wh / 2) / ((s.z / ww) * 2) + wh / 2
+      const size = (1 - s.z / ww) * 3
+      wctx.fillStyle = "white"
+      wctx.fillRect(px, py, size, size)
+    })
+    requestAnimationFrame(animateWarp)
+  }
+  animateWarp()
+
   launchBtn.addEventListener("click", () => {
     const rect = launchBtn.getBoundingClientRect()
     const cx = rect.left + rect.width / 2
@@ -50,14 +105,22 @@ document.addEventListener("DOMContentLoaded", () => {
     createParticles(cx, cy)
     launchBtn.textContent = "Declare seu amor"
     launchBtn.classList.add("launching")
+    warpActive = true
 
     setTimeout(() => {
+      // esconde a tela inicial
       landingWrap.style.display = "none"
-      document.getElementById("appWrap").style.display = "flex"
+      // mostra o site
+      const appWrap = document.getElementById("appWrap")
+      appWrap.style.display = "flex"
+      appWrap.style.alignItems = "center"
+      appWrap.style.justifyContent = "center"
+      // remove o canvas de warp para não sobrepor
+      warpCanvas.style.display = "none"
     }, 2000)
   })
 
-  /* ----- BACKGROUND ESTRELAS ----- */
+  /* ---------- BACKGROUND ESTRELAS ---------- */
   const canvas = document.getElementById("starCanvas")
   const ctx = canvas.getContext("2d")
   let w = (canvas.width = window.innerWidth)
@@ -68,15 +131,15 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   const stars = []
-  const STAR_COUNT = 120
+  const STAR_COUNT = 70
   const shootingStars = []
   for (let i = 0; i < STAR_COUNT; i++) {
     stars.push({
       x: Math.random() * w,
       y: Math.random() * h,
       r: Math.random() * 1.2 + 0.5,
-      alpha: Math.random(),
-      dAlpha: Math.random() * 0.02,
+      alpha: Math.random() * 0.5 + 0.3,
+      dAlpha: Math.random() * 0.015,
     })
   }
 
@@ -97,11 +160,31 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fillStyle = `rgba(255,255,255,${s.alpha})`
       ctx.fill()
     })
+
+    if (Math.random() < 0.002)
+      shootingStars.push({
+        x: Math.random() * w,
+        y: 0,
+        len: Math.random() * 100 + 50,
+        speed: Math.random() * 10 + 5,
+      })
+    shootingStars.forEach((s, i) => {
+      s.x += s.speed
+      s.y += s.speed
+      ctx.beginPath()
+      ctx.moveTo(s.x, s.y)
+      ctx.lineTo(s.x - s.len, s.y - s.len)
+      ctx.strokeStyle = "rgba(255,255,255,0.7)"
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+      if (s.x > w || s.y > h) shootingStars.splice(i, 1)
+    })
+
     requestAnimationFrame(drawStars)
   }
   drawStars()
 
-  /* ----- SEU CÓDIGO ORIGINAL DO SITE (form, preview, slides, timer) ----- */
+  /* ---------- STEPS ---------- */
   const steps = Array.from(document.querySelectorAll(".step"))
   const stepDots = Array.from(document.querySelectorAll(".step-dot"))
   let currentStep = 0
@@ -131,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   )
 
+  /* ---------- PREVIEW TEXTS ---------- */
   const previewRecipient = document.getElementById("previewRecipient")
   const previewSender = document.getElementById("previewSender")
   const previewMessage = document.getElementById("previewMessage")
@@ -153,6 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.value || "Sua mensagem aparecerá aqui...")
   )
 
+  /* ---------- SLIDES ---------- */
   const slidesWrapper = document.getElementById("slidesWrapper")
   let slideUrls = []
   let slideIndex = 0
@@ -163,7 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSlides()
     startSlides()
   })
-
   function renderSlides() {
     slidesWrapper.innerHTML = ""
     if (slideUrls.length === 0) {
@@ -184,7 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     slidesWrapper.style.transform = `translateX(0%)`
   }
-
   function startSlides() {
     if (slideInterval) clearInterval(slideInterval)
     if (slideUrls.length > 1) {
@@ -197,10 +280,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderSlides()
 
+  /* ---------- TIMER ---------- */
   const timerText = document.getElementById("timerText")
   let specialDate = null
   let timerInterval = null
-
   function computeDiffComponents(diffMs) {
     const sign = diffMs >= 0 ? 1 : -1
     let ms = Math.abs(diffMs)
@@ -217,7 +300,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const seconds = Math.floor(ms / 1000)
     return { sign, years, months, days, hours, minutes, seconds }
   }
-
   function updateTimerDisplay() {
     if (!specialDate) {
       timerText.textContent = "00 anos 00 meses 00 dias 00:00:00"
@@ -234,7 +316,6 @@ document.addEventListener("DOMContentLoaded", () => {
     timerText.textContent =
       c.sign >= 0 ? `Faltam: ${text}` : `Se passaram: ${text}`
   }
-
   document.getElementById("specialDate").addEventListener("change", (e) => {
     specialDate = e.target.value ? new Date(e.target.value) : null
     updateTimerDisplay()
@@ -242,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimerDisplay, 1000)
   })
 
+  /* ---------- FINALIZAR ---------- */
   const form = document.getElementById("declarationForm")
   form.addEventListener("submit", (e) => {
     e.preventDefault()
