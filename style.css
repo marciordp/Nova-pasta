@@ -1,9 +1,13 @@
 :root{
-  --accent:#ff5e78;
+  --accent:#e75480;
   --bg:#050209;
   --card:#130921;
   --dark:#fff;
   --muted:#ccc;
+  --glass-bg: rgba(43,24,64,0.35);
+  --glass-blur: 16px;
+  --card-radius: 18px;
+  --card-shadow: 0 12px 35px rgba(0,0,0,0.35);
 }
 
 /* RESET */
@@ -18,11 +22,10 @@ body,html{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-syst
   background:linear-gradient(180deg,#020103,#100920);
   flex-direction:column;z-index:9999;
   overflow:hidden;
+  transition:opacity 500ms ease;
 }
 
-.color-name{
-  color: var(--muted);
-}
+label{color: var(--muted);}
 #launchBtn{
   padding:16px 32px;
   font-size:20px;
@@ -33,10 +36,29 @@ body,html{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-syst
   color:white;
   font-weight:700;
   transition:all 0.3s;
+  z-index:10001;
+  position:relative;
 }
 #launchBtn.launching{box-shadow:0 0 20px 6px var(--accent); transform:scale(1.2);}
 
-#launchParticles{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+/* PARTICLES */
+#launchParticles{position:absolute;top:0;left:0;width:100%;height:100%;z-index:9997;pointer-events:none}
+
+/* CIRCLE EXPAND */
+#circleExpand {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 200vmax;
+  height: 200vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,94,120,1) 0%, #100920 60%);
+  transform: translate(-50%, -50%) scale(0);
+  z-index:10000;
+  pointer-events: none;
+  transition: transform 900ms cubic-bezier(.16,.9,.3,1), opacity 250ms ease;
+}
+#circleExpand.active {transform: translate(-50%, -50%) scale(1); opacity: 1;}
 
 /* APP WRAP */
 #appWrap{
@@ -57,22 +79,37 @@ body,html{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-syst
 }
 
 /* APP */
-.app-wrap{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:center;gap:18px;padding:18px}
-.container{display:flex;gap:18px;width:100%;justify-content:center;align-items:center}
+.app-wrap{
+  width:100%;
+  max-width:1100px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:18px;
+}
+.container{
+  display:flex;
+  gap:12px;
+  width:100%;
+  justify-content:center;
+  align-items:center;
+}
 
 /* FORM SIDE */
 .form-side{
   flex:0 0 auto;
-  padding:18px;
-  background:linear-gradient(180deg,#2b1840,#10081c);
-  border-radius:16px;
-  overflow:auto;
+  padding:20px;
+  background: var(--glass-bg);
+  border-radius: var(--card-radius);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  max-height:600px;
   width:300px;
+  max-height:none;
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  box-shadow: var(--card-shadow);
 }
 
 /* STEPS INDICATOR */
@@ -88,31 +125,60 @@ body,html{margin:0;padding:0;height:100%;font-family:Inter,system-ui,-apple-syst
 .step{display:none;flex-direction:column;gap:12px;width:100%}
 .step.active{display:flex}
 input[type="text"], input[type="date"], textarea, input[type="file"]{
-  width:100%; padding:10px 12px; border-radius:10px; border:1px solid #452b55; font-size:15px; background:#2b1840; color:white;
+  width:100%; padding:12px; border-radius:12px; border:1px solid #452b55; font-size:15px;
+  background: rgba(43,24,64,0.45); color:white;
+  backdrop-filter: blur(12px);
 }
 textarea{min-height:90px; resize:vertical}
 
 /* BUTTONS */
 .btn-group{display:flex;gap:10px;justify-content:center}
-button{background:var(--accent); color:white; border:0; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
+button{background:var(--accent); color:white; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600}
 button:hover{filter:brightness(.95)}
+
+/* PREVIEW SIDE */
+.preview-side{
+  flex:0 0 auto;
+  padding:20px;
+  background: var(--glass-bg);
+  border-radius: var(--card-radius);
+  width:320px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  box-shadow: var(--card-shadow);
+  transition: all 0.5s ease;
+}
 
 /* PREVIEW CARD */
 .card{
   width:100%;
-  max-width:520px;
-  background:linear-gradient(180deg,#2b1840,#10081c);
-  border-radius:16px;
+  background: var(--glass-bg);
+  border-radius: var(--card-radius);
   padding:20px;
   text-align:center;
-  box-shadow:0 8px 30px rgba(0,0,0,0.3);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  transition: all 0.5s ease;
 }
 .card h2{font-family:"Dancing Script",cursive;color:var(--accent);margin:0 0 12px;font-size:28px}
 .preview-message{color:var(--dark);margin:12px 0 6px;line-height:1.4}
 .preview-from{color:var(--muted);margin:0}
 
 /* SLIDESHOW */
-.slideshow-box{width:100%; height:220px; border-radius:12px; overflow:hidden; background:#2b1840; display:flex; align-items:center; justify-content:center}
+.slideshow-box{
+  width:100%;
+  height:220px;
+  border-radius:12px;
+  overflow:hidden;
+  background: rgba(43,24,64,0.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter: blur(12px);
+}
 .slides-wrapper{display:flex; height:100%; transition:transform 700ms ease}
 .slide{flex:0 0 100%; display:flex; align-items:center; justify-content:center}
 .slide img{max-width:100%; max-height:100%; object-fit:contain; border-radius:8px}
@@ -121,9 +187,33 @@ button:hover{filter:brightness(.95)}
 .timer-row{margin-top:10px; display:flex; justify-content:center}
 .timer-text{font-weight:700; color:var(--accent); font-size:14px}
 
+/* FINALIZADO REFINADO */
+.preview-side.finalized {
+  flex: 0 0 auto;
+  width: 360px;        
+  max-height: 600px;   
+  margin: 0 auto;      
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card.finalized {
+  width: 100%;
+  max-height: 100%;
+  padding: 18px;
+  overflow: auto;     
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 /* RESPONSIVE */
 @media(max-width:900px){
   .container{flex-direction:column;align-items:center}
-  .form-side{order:1;max-height:45vh;overflow:auto;width:80%}
+  .form-side{order:1;width:80%}
   .preview-side{order:2;width:90%}
 }
