@@ -111,61 +111,208 @@ textarea{min-height:90px; resize:vertical}
 button{background:var(--accent); color:white; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600}
 button:hover{filter:brightness(.95)}
 
-/* PREVIEW SIDE */
+/* PREVIEW SIDE (CELULAR) */
 .preview-side{
   flex:0 0 auto;
-  padding:20px;
-  background: var(--glass-bg);
-  border-radius: var(--card-radius);
-  width:320px;
-  display:flex; flex-direction:column; justify-content:flex-start; align-items:center;
-  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  box-shadow: var(--card-shadow);
-  transition: all 0.5s ease;
+  display:flex; align-items:center; justify-content:center;
+  perspective:1200px;
 }
 
-/* PREVIEW CARD */
+.phone-frame{
+  width:320px; 
+  height:600px;
+  background: var(--glass-bg);
+  border-radius:40px;
+  border:4px solid #452b55;
+  box-shadow: var(--card-shadow);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+
+.phone-notch{
+  width:60px; 
+  height:20px;
+  background: #452b55;
+  border-radius:10px;
+  position:absolute;
+  top:8px; 
+  left:50%; 
+  transform:translateX(-50%);
+  z-index:10;
+}
+
+.phone-content{
+  flex:1; 
+  padding:16px; 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  justify-content:flex-start;
+  overflow:hidden; /* remove scroll */
+  text-align:center;
+}
+
+.phone-nav{
+  height:36px; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  gap:8px; 
+  margin-top:8px;
+}
+
+.phone-nav .nav-dot{
+  width:100px; 
+  height:10px; 
+  border-radius:5px; 
+  background:#452b55;
+}
+
+/* CARD */
 .card{
   width:100%;
-  background: var(--glass-bg);
+  background: transparent;
   border-radius: var(--card-radius);
-  padding:20px;
+  padding:0;
   text-align:center;
-  box-shadow: var(--card-shadow);
-  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  transition: all 0.5s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
-.card h2{ font-family:"Dancing Script",cursive;color:var(--accent);margin:0 0 12px;font-size:28px }
-.preview-message{ color:var(--dark); margin:1rem 0 0.75rem; line-height:1.4 }
-.preview-from{ color:var(--muted); margin-top: 1rem; }
+
+.card h2{
+  font-family:"Dancing Script",cursive;
+  color:var(--accent);
+  margin:1rem 0 1px;
+  font-size:28px;
+}
+
+.preview-message{
+   color: var(--dark);
+  margin: 1rem 0 0.75rem;
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: block;        /* deixa como bloco normal para respeitar width */
+  width: 100%;           /* ocupa 100% do container */
+  max-width: 100%;       /* não ultrapassa o container */
+  white-space: normal;   /* permite quebra automática de linha */
+  overflow: hidden;      /* corta excesso vertical se necessário */
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.preview-from{
+  color:var(--muted); 
+  margin-top: 1rem;
+}
 
 /* SLIDESHOW */
 .slideshow-box{
-  width:12.4375rem; height:22.083rem;
+  width: 80%;
+  max-width: 200px;
+  aspect-ratio: 11.1225 / 19.083;
   border-radius:12px;
   overflow:hidden;
   background: rgba(43,24,64,0.35);
-  display:flex; align-items:center; justify-content:center;
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
   backdrop-filter: blur(12px);
-  margin: 0 auto;
+  margin: 12px auto; /* centralizado */
 }
-.slides-wrapper{ display:flex; height:100%; width:100%; transition: transform 700ms ease; }
-.slide{ flex:0 0 100%; display:flex; align-items:center; justify-content:center; }
-.slide img{max-width:100%; max-height:100%; object-fit:contain; border-radius:8px}
+
+.slides-wrapper{
+  display:flex; 
+  height:100%; 
+  width:100%; 
+  transition: transform 700ms ease;
+}
+
+.slide{
+  flex:0 0 100%; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+}
+
+.slide img{
+  max-width:100%; 
+  max-height:100%; 
+  object-fit:contain; 
+  border-radius:8px;
+}
+
+/* FINALIZADO */
+.preview-side.finalized .phone-frame{
+  width:auto;
+  height:auto;
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
+}
+
+/* FINALIZADO - limita o texto e permite quebra de linha */
+.preview-side.finalized .preview-message {
+  display: block;
+  width: 100%;          /* ocupa 100% do container finalizado */
+  max-width: 28.125rem;      /* limite máximo que desejar */
+  white-space: normal;   /* permite quebra de linha */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.preview-side.finalized .phone-content,
+.preview-side.finalized .card{
+   width: 100%;
+  max-width: 28.125rem;        /* largura máxima do conteúdo */
+  max-height: 90vh;        /* altura máxima da tela */
+  overflow-y: auto;        /* permite scroll vertical se o texto for grande */
+  overflow-x: hidden;      /* impede scroll horizontal */
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.preview-side.finalized .slideshow-box{
+  margin:12px auto;
+}
+
+/* Remove notch e navegação no finalizado */
+.preview-side.finalized .phone-notch,
+.preview-side.finalized .phone-nav{
+  display:none;
+}
 
 /* TIMER */
-.timer-row{margin-top:10px; display:flex; justify-content:center}
-.timer-text{font-weight:700; color:var(--accent); font-size:14px}
+.timer-row{
+  display:flex; 
+  justify-content:center; 
+  margin-bottom:12px;
+}
 
-/* FINALIZADO (preview sem caixas) */
-.preview-side.finalized { background: transparent; box-shadow: none; padding: 0; width: 100%; max-width: 700px; }
-.card.finalized { background: transparent; box-shadow: none; padding: 0; max-width: 100%; width: 20rem; }
-.card.finalized h2 { font-size: 32px; margin-bottom: 16px; }
-.preview-message.finalized { font-size: 1rem; color: #eee; max-width: 600px; margin: 1.5rem auto; line-height: 1.6; text-align: justify; }
+.timer-text{
+  font-weight:700; 
+  color:var(--accent); 
+  font-size:14px;
+}
 
 /* RESPONSIVE */
 @media(max-width:900px){
-  .container{flex-direction:column;align-items:center}
-  .form-side{order:1;width:80%}
-  .preview-side{order:2;width:90%}
+  .container{
+    flex-direction:column;
+    align-items:center;
+  }
+  .form-side{
+    order:1;
+    width:80%;
+  }
+  .preview-side{
+    order:2;
+    width:90%;
+  }
 }
