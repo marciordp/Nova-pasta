@@ -5,14 +5,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("circleExpand")
   const particlesCanvas = document.getElementById("launchParticles")
   const pctx = particlesCanvas.getContext("2d")
-
   let pw = (particlesCanvas.width = window.innerWidth)
   let ph = (particlesCanvas.height = window.innerHeight)
-  window.addEventListener("resize", () => {
+
+  // resize unificado
+  function resizeAll() {
     pw = particlesCanvas.width = window.innerWidth
     ph = particlesCanvas.height = window.innerHeight
-  })
+    ww = warpCanvas.width = window.innerWidth
+    wh = warpCanvas.height = window.innerHeight
+    w = canvas.width = window.innerWidth
+    h = canvas.height = window.innerHeight
+  }
+  window.addEventListener("resize", resizeAll)
 
+  /* PARTICLES */
   const particles = []
   function createParticles(x, y) {
     for (let i = 0; i < 80; i++) {
@@ -28,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     }
   }
-
   function animateParticles() {
     pctx.clearRect(0, 0, pw, ph)
     for (let i = particles.length - 1; i >= 0; i--) {
@@ -48,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   animateParticles()
 
-  // Warp stars
+  /* WARP STARS */
   const warpCanvas = document.createElement("canvas")
   warpCanvas.style.position = "fixed"
   warpCanvas.style.top = "0"
@@ -59,13 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
   warpCanvas.style.pointerEvents = "none"
   document.body.appendChild(warpCanvas)
   const wctx = warpCanvas.getContext("2d")
-  let ww = (warpCanvas.width = window.innerWidth),
-    wh = (warpCanvas.height = window.innerHeight)
-  window.addEventListener("resize", () => {
-    ww = warpCanvas.width = window.innerWidth
-    wh = warpCanvas.height = window.innerHeight
-  })
-
+  let ww = (warpCanvas.width = window.innerWidth)
+  let wh = (warpCanvas.height = window.innerHeight)
   const warpStars = []
   const WARP_COUNT = 160
   for (let i = 0; i < WARP_COUNT; i++) {
@@ -139,10 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const ctx = canvas.getContext("2d")
   let w = (canvas.width = window.innerWidth),
     h = (canvas.height = window.innerHeight)
-  window.addEventListener("resize", () => {
-    w = canvas.width = window.innerWidth
-    h = canvas.height = window.innerHeight
-  })
   const stars = [],
     shootingStars = []
   const STAR_COUNT = 70
@@ -155,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
       dAlpha: Math.random() * 0.015,
     })
   }
-
   function drawStars() {
     ctx.clearRect(0, 0, w, h)
     stars.forEach((s) => {
@@ -233,7 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const recipientInput = document.getElementById("recipientName")
   const senderInput = document.getElementById("senderName")
   const messageInput = document.getElementById("message")
-
   recipientInput.addEventListener(
     "input",
     (e) =>
@@ -260,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     list.forEach((u) => {
       try {
         URL.revokeObjectURL(u)
-      } catch (err) {}
+      } catch {}
     })
   }
   document.getElementById("photos").addEventListener("change", (e) => {
@@ -277,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
       empty.className = "slide"
       empty.innerHTML = '<div style="color:#bdbdbd">Sem fotos</div>'
       slidesWrapper.appendChild(empty)
-      slidesWrapper.style.transform = `translateX(0%)`
+      slidesWrapper.style.transform = "translateX(0%)"
       return
     }
     slideUrls.forEach((url) => {
@@ -289,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
       s.appendChild(img)
       slidesWrapper.appendChild(s)
     })
-    slidesWrapper.style.transform = `translateX(0%)`
+    slidesWrapper.style.transform = "translateX(0%)"
   }
   function startSlides() {
     if (slideInterval) clearInterval(slideInterval)
@@ -299,9 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
         slideIndex = (slideIndex + 1) % slideUrls.length
         slidesWrapper.style.transform = `translateX(${-slideIndex * 100}%)`
       }, 2500)
-    } else {
-      slidesWrapper.style.transform = `translateX(0%)`
-    }
+    } else slidesWrapper.style.transform = "translateX(0%)"
   }
   renderSlides()
 
