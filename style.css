@@ -68,40 +68,21 @@ label{color: var(--muted);}
 #starCanvas{ position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:linear-gradient(180deg,#0b0612,#1e0f33); }
 
 /* APP */
-.app-wrap{ 
-  width:100%; 
-  max-width:1100px; 
-  display:flex; 
-  align-items:center; 
-  justify-content:center; 
-  gap:12px; 
-  padding:18px;
-  margin:0 auto; /* centraliza no desktop */
-}
-.container{ 
-  display:flex; 
-  gap:12px; 
-  width:100%; 
-  justify-content:center; 
-  align-items:flex-start;
-  flex-wrap:wrap; /* permite quebra no mobile */
-  padding:8px; /* padding extra para mobile */
-}
+.app-wrap{ width:100%; max-width:1100px; display:flex; align-items:center; justify-content:center; gap:12px; padding:18px; }
+.container{ display:flex; gap:12px; width:100%; justify-content:center; align-items:center;
+margin: 2rem; }
 
 /* FORM SIDE */
 .form-side{
   flex:0 0 auto;
-  padding:20px 16px; /* mais folga nas laterais */
+  padding:20px;
   background: var(--glass-bg);
   border-radius: var(--card-radius);
   display:flex; flex-direction:column;
   align-items:center; justify-content:flex-start;
-  width:100%;
-  max-width:320px; /* não ultrapassa 320px */
+  width:300px;
   backdrop-filter: blur(var(--glass-blur)) saturate(120%);
   box-shadow: var(--card-shadow);
-  box-sizing:border-box;
-  margin-bottom:20px; /* espaço inferior no mobile */
 }
 
 /* STEPS INDICATOR */
@@ -123,23 +104,12 @@ input[type="text"], input[type="date"], textarea, input[type="file"]{
   width:100%; padding:12px; border-radius:12px; border:1px solid #452b55;
   font-size:15px; background: rgba(43,24,64,0.45); color:white;
   backdrop-filter: blur(12px);
-  box-sizing:border-box;
 }
 textarea{min-height:90px; resize:vertical}
 
 /* BUTTONS */
 .btn-group{display:flex;gap:10px;justify-content:center}
-button{
-  background:var(--accent); 
-  color:white; 
-  border:0; 
-  padding:10px 14px; 
-  border-radius:12px; 
-  cursor:pointer; 
-  font-weight:600;
-  width:100%; /* ocupa toda largura do form */
-  max-width:200px; /* mas não muito grande */
-}
+button{background:var(--accent); color:white; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600}
 button:hover{filter:brightness(.95)}
 
 /* PREVIEW SIDE (CELULAR) */
@@ -147,15 +117,10 @@ button:hover{filter:brightness(.95)}
   flex:0 0 auto;
   display:flex; align-items:center; justify-content:center;
   perspective:1200px;
-  width:100%;
-  max-width:360px; /* limite de largura */
-  padding:0 16px;   /* afastamento lateral */
 }
 
-/* PHONE FRAME */
 .phone-frame{
-  width:100%; 
-  max-width:320px; 
+  width:320px; 
   height:600px;
   background: var(--glass-bg);
   border-radius:40px;
@@ -166,7 +131,6 @@ button:hover{filter:brightness(.95)}
   position:relative;
 }
 
-/* PHONE NOTCH */
 .phone-notch{
   width:60px; 
   height:20px;
@@ -179,7 +143,6 @@ button:hover{filter:brightness(.95)}
   z-index:10;
 }
 
-/* PHONE CONTENT */
 .phone-content{
   flex:1; 
   padding:16px; 
@@ -187,8 +150,24 @@ button:hover{filter:brightness(.95)}
   flex-direction:column; 
   align-items:center; 
   justify-content:flex-start;
-  overflow:hidden; 
+  overflow:hidden; /* remove scroll */
   text-align:center;
+}
+
+.phone-nav{
+  height:36px; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  gap:8px; 
+  margin-top:8px;
+}
+
+.phone-nav .nav-dot{
+  width:100px; 
+  height:10px; 
+  border-radius:5px; 
+  background:#452b55;
 }
 
 /* CARD */
@@ -217,11 +196,11 @@ button:hover{filter:brightness(.95)}
   line-height: 1.2;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  white-space: normal;
-  overflow: hidden;
+  display: block;        /* deixa como bloco normal para respeitar width */
+  width: 100%;           /* ocupa 100% do container */
+  max-width: 100%;       /* não ultrapassa o container */
+  white-space: normal;   /* permite quebra automática de linha */
+  overflow: hidden;      /* corta excesso vertical se necessário */
   text-align: center;
   box-sizing: border-box;
 }
@@ -239,21 +218,32 @@ button:hover{filter:brightness(.95)}
   border-radius:12px;
   overflow:hidden;
   background: rgba(43,24,64,0.35);
-  display:flex; align-items:center; justify-content:center;
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
   backdrop-filter: blur(12px);
-  margin: 12px auto; 
+  margin: 12px auto; /* centralizado */
 }
 
 .slides-wrapper{
-  display:flex; height:100%; width:100%; transition: transform 700ms ease;
+  display:flex; 
+  height:100%; 
+  width:100%; 
+  transition: transform 700ms ease;
 }
 
 .slide{
-  flex:0 0 100%; display:flex; align-items:center; justify-content:center;
+  flex:0 0 100%; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
 }
 
 .slide img{
-  max-width:100%; max-height:100%; object-fit:contain; border-radius:8px;
+  max-width:100%; 
+  max-height:100%; 
+  object-fit:contain; 
+  border-radius:8px;
 }
 
 /* FINALIZADO */
@@ -266,11 +256,12 @@ button:hover{filter:brightness(.95)}
   background:transparent;
 }
 
+/* FINALIZADO - limita o texto e permite quebra de linha */
 .preview-side.finalized .preview-message {
   display: block;
-  width: 100%;          
-  max-width: 28.125rem;      
-  white-space: normal;  
+  width: 100%;          /* ocupa 100% do container finalizado */
+  max-width: 28.125rem;      /* limite máximo que desejar */
+  white-space: normal;   /* permite quebra de linha */
   word-wrap: break-word;
   overflow-wrap: break-word;
   text-align: center;
@@ -280,10 +271,10 @@ button:hover{filter:brightness(.95)}
 .preview-side.finalized .phone-content,
 .preview-side.finalized .card{
    width: 100%;
-  max-width: 28.125rem; 
-  max-height: 90vh; 
-  overflow-y: auto; 
-  overflow-x: hidden; 
+  max-width: 28.125rem;        /* largura máxima do conteúdo */
+  max-height: 90vh;        /* altura máxima da tela */
+  overflow-y: auto;        /* permite scroll vertical se o texto for grande */
+  overflow-x: hidden;      /* impede scroll horizontal */
   padding: 16px;
   box-sizing: border-box;
 }
@@ -292,6 +283,7 @@ button:hover{filter:brightness(.95)}
   margin:12px auto;
 }
 
+/* Remove notch e navegação no finalizado */
 .preview-side.finalized .phone-notch,
 .preview-side.finalized .phone-nav{
   display:none;
@@ -299,11 +291,15 @@ button:hover{filter:brightness(.95)}
 
 /* TIMER */
 .timer-row{
-  display:flex; justify-content:center; margin-bottom:12px;
+  display:flex; 
+  justify-content:center; 
+  margin-bottom:12px;
 }
 
 .timer-text{
-  font-weight:700; color:var(--accent); font-size:14px;
+  font-weight:700; 
+  color:var(--accent); 
+  font-size:14px;
 }
 
 /* RESPONSIVE */
@@ -311,22 +307,13 @@ button:hover{filter:brightness(.95)}
   .container{
     flex-direction:column;
     align-items:center;
-    padding:12px;
   }
   .form-side{
-    width:90%;
-    max-width:360px;
-    padding:20px;
+    order:1;
+    width:80%;
   }
   .preview-side{
-    width:95%;
-    max-width:360px;
-    padding:0 12px;
-    margin-bottom:24px;
+    order:2;
+    width:90%;
   }
-  .phone-frame{
-    width:100%;
-    max-width:320px;
-    height:auto;
-  }
-} 
+}
