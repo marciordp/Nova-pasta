@@ -166,9 +166,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Camadas de estrelas
   const layers = [
-    { count: 40, speed: 0.09, size: 0.7, alphaRange: [0.2, 0.5], stars: [] },
-    { count: 30, speed: 0.1, size: 1.1, alphaRange: [0.3, 0.7], stars: [] },
-    { count: 20, speed: 0.4, size: 1.9, alphaRange: [0.5, 1], stars: [] },
+    { count: 17, speed: 0.05, size: 0.7, alphaRange: [0.2, 0.5], stars: [] },
+    { count: 13, speed: 0.08, size: 1.1, alphaRange: [0.3, 0.7], stars: [] },
+    { count: 8, speed: 0.1, size: 1.9, alphaRange: [0.5, 1], stars: [] },
   ]
 
   layers.forEach((layer) => {
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     layers.forEach((layer) => {
       layer.stars.forEach((s) => {
-        s.y += s.speed
+        s.y -= s.speed
         s.alpha += s.dAlpha
         if (s.alpha > 1 || s.alpha < 0) s.dAlpha *= -1
         if (s.y > window.innerHeight) {
