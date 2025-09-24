@@ -5,19 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("circleExpand")
   const particlesCanvas = document.getElementById("launchParticles")
   const pctx = particlesCanvas.getContext("2d")
-  let pw = (particlesCanvas.width = window.innerWidth)
-  let ph = (particlesCanvas.height = window.innerHeight)
 
-  // resize unificado
-  function resizeAll() {
-    pw = particlesCanvas.width = window.innerWidth
-    ph = particlesCanvas.height = window.innerHeight
-    ww = warpCanvas.width = window.innerWidth
-    wh = warpCanvas.height = window.innerHeight
-    w = canvas.width = window.innerWidth
-    h = canvas.height = window.innerHeight
+  // Ajuste canvas Retina
+  function resizeCanvas(canvas, ctx) {
+    const dpr = window.devicePixelRatio || 1
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
+    canvas.style.width = `${window.innerWidth}px`
+    canvas.style.height = `${window.innerHeight}px`
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+    ctx.scale(dpr, dpr)
   }
-  window.addEventListener("resize", resizeAll)
+  resizeCanvas(particlesCanvas, pctx)
 
   /* PARTICLES */
   const particles = []
@@ -36,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   function animateParticles() {
-    pctx.clearRect(0, 0, pw, ph)
+    pctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height)
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i]
       p.x += p.vx
@@ -65,15 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
   warpCanvas.style.pointerEvents = "none"
   document.body.appendChild(warpCanvas)
   const wctx = warpCanvas.getContext("2d")
-  let ww = (warpCanvas.width = window.innerWidth)
-  let wh = (warpCanvas.height = window.innerHeight)
+  resizeCanvas(warpCanvas, wctx)
   const warpStars = []
   const WARP_COUNT = 160
   for (let i = 0; i < WARP_COUNT; i++) {
     warpStars.push({
-      x: Math.random() * ww,
-      y: Math.random() * wh,
-      z: Math.random() * ww,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      z: Math.random() * window.innerWidth,
       r: Math.random() * 1.2 + 0.5,
     })
   }
@@ -84,17 +82,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return
     }
     wctx.fillStyle = "rgba(11,6,18,0.2)"
-    wctx.fillRect(0, 0, ww, wh)
+    wctx.fillRect(0, 0, warpCanvas.width, warpCanvas.height)
     warpStars.forEach((s) => {
       s.z -= 18
       if (s.z <= 0) {
-        s.z = ww
-        s.x = Math.random() * ww
-        s.y = Math.random() * wh
+        s.z = window.innerWidth
+        s.x = Math.random() * window.innerWidth
+        s.y = Math.random() * window.innerHeight
       }
-      const px = (s.x - ww / 2) / ((s.z / ww) * 2) + ww / 2
-      const py = (s.y - wh / 2) / ((s.z / ww) * 2) + wh / 2
-      const size = Math.max(0.5, (1 - s.z / ww) * 3)
+      const px =
+        (s.x - window.innerWidth / 2) / ((s.z / window.innerWidth) * 2) +
+        window.innerWidth / 2
+      const py =
+        (s.y - window.innerHeight / 2) / ((s.z / window.innerWidth) * 2) +
+        window.innerHeight / 2
+      const size = Math.max(0.5, (1 - s.z / window.innerWidth) * 3)
       wctx.fillStyle = "rgba(255,255,255,0.9)"
       wctx.fillRect(px, py, size, size)
     })
@@ -102,12 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   animateWarp()
 
-  launchBtn.addEventListener("click", () => {
+  /* BOTÃO LANÇAR */
+  function launchEvent() {
     if (launchBtn.disabled) return
     launchBtn.disabled = true
     const rect = launchBtn.getBoundingClientRect()
-    const cx = rect.left + rect.width / 2,
-      cy = rect.top + rect.height / 2
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
     createParticles(cx, cy)
     launchBtn.textContent = "Declare seu amor"
     launchBtn.classList.add("launching")
@@ -125,35 +128,32 @@ document.addEventListener("DOMContentLoaded", () => {
         appWrap.style.alignItems = "center"
         appWrap.style.justifyContent = "center"
         warpCanvas.style.display = "none"
-        requestAnimationFrame(() => {
-          appWrap.style.opacity = "1"
-        })
-        setTimeout(() => {
-          circle.classList.remove("active")
-        }, 600)
+        requestAnimationFrame(() => (appWrap.style.opacity = "1"))
+        setTimeout(() => circle.classList.remove("active"), 600)
       }, 220)
     }, 950)
-  })
+  }
+  launchBtn.addEventListener("click", launchEvent)
+  launchBtn.addEventListener("touchstart", launchEvent)
 
-  /* ---------- BACKGROUND STARS ---------- */
+  /* BACKGROUND STARS */
   const canvas = document.getElementById("starCanvas")
   const ctx = canvas.getContext("2d")
-  let w = (canvas.width = window.innerWidth),
-    h = (canvas.height = window.innerHeight)
+  resizeCanvas(canvas, ctx)
   const stars = [],
     shootingStars = []
   const STAR_COUNT = 70
   for (let i = 0; i < STAR_COUNT; i++) {
     stars.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
       r: Math.random() * 1.2 + 0.5,
       alpha: Math.random() * 0.5 + 0.3,
       dAlpha: Math.random() * 0.015,
     })
   }
   function drawStars() {
-    ctx.clearRect(0, 0, w, h)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     stars.forEach((s) => {
       s.alpha += s.dAlpha
       if (s.alpha > 1) {
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     if (Math.random() < 0.003) {
       shootingStars.push({
-        x: Math.random() * w,
+        x: Math.random() * window.innerWidth,
         y: 0,
         len: Math.random() * 120 + 60,
         speed: Math.random() * 10 + 6,
@@ -186,7 +186,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.strokeStyle = "rgba(255,255,255,0.75)"
       ctx.lineWidth = 1.2
       ctx.stroke()
-      if (s.x > w + 50 || s.y > h + 50) shootingStars.splice(i, 1)
+      if (s.x > window.innerWidth + 50 || s.y > window.innerHeight + 50)
+        shootingStars.splice(i, 1)
     })
     requestAnimationFrame(drawStars)
   }
@@ -306,15 +307,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const sign = diffMs >= 0 ? 1 : -1
     let ms = Math.abs(diffMs)
     const years = Math.floor(ms / (1000 * 60 * 60 * 24 * 365))
-    ms -= years * (1000 * 60 * 60 * 24 * 365)
+    ms -= years * 1000 * 60 * 60 * 24 * 365
     const months = Math.floor(ms / (1000 * 60 * 60 * 24 * 30))
-    ms -= months * (1000 * 60 * 60 * 24 * 30)
+    ms -= months * 1000 * 60 * 60 * 24 * 30
     const days = Math.floor(ms / (1000 * 60 * 60 * 24))
-    ms -= days * (1000 * 60 * 60 * 24)
+    ms -= days * 1000 * 60 * 60 * 24
     const hours = Math.floor(ms / (1000 * 60 * 60))
-    ms -= hours * (1000 * 60 * 60)
+    ms -= hours * 1000 * 60 * 60
     const minutes = Math.floor(ms / (1000 * 60))
-    ms -= minutes * (1000 * 60)
+    ms -= minutes * 1000 * 60
     const seconds = Math.floor(ms / 1000)
     return { sign, years, months, days, hours, minutes, seconds }
   }
@@ -361,4 +362,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (timerInterval) clearInterval(timerInterval)
     timerInterval = setInterval(updateTimerDisplay, 1000)
   })
+
+  /* ---------- RESIZE ALL CANVAS ---------- */
+  function resizeAll() {
+    resizeCanvas(particlesCanvas, pctx)
+    resizeCanvas(warpCanvas, wctx)
+    resizeCanvas(canvas, ctx)
+  }
+  window.addEventListener("resize", resizeAll)
 })
