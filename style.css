@@ -244,7 +244,7 @@ button:hover{filter:brightness(.95)}
 .slideshow-box{
   width: 80%;
   max-width: 200px;
-  aspect-ratio: 11.1225 / 19.083;
+  aspect-ratio: 9.0225 / 15.083;
   border-radius:12px;
   overflow:hidden;
   background: rgba(43,24,64,0.35);
