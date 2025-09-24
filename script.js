@@ -136,62 +136,85 @@ document.addEventListener("DOMContentLoaded", () => {
   launchBtn.addEventListener("click", launchEvent)
   launchBtn.addEventListener("touchstart", launchEvent)
 
-  /* BACKGROUND STARS */
-  const canvas = document.getElementById("starCanvas")
-  const ctx = canvas.getContext("2d")
-  resizeCanvas(canvas, ctx)
-  const stars = [],
-    shootingStars = []
-  const STAR_COUNT = 70
-  for (let i = 0; i < STAR_COUNT; i++) {
-    stars.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      r: Math.random() * 1.2 + 0.5,
-      alpha: Math.random() * 0.5 + 0.3,
-      dAlpha: Math.random() * 0.015,
-    })
+  /* ---------- STARS-GERAL AVANÇADO ---------- */
+  /* ---------- STARS-GERAL CORRIGIDO ---------- */
+  const starsCanvas = document.createElement("canvas")
+  starsCanvas.id = "starsGeralCanvas"
+  starsCanvas.style.position = "fixed"
+  starsCanvas.style.top = "0"
+  starsCanvas.style.left = "0"
+  starsCanvas.style.width = "100%"
+  starsCanvas.style.height = "100%"
+  starsCanvas.style.pointerEvents = "none"
+  starsCanvas.style.zIndex = "0"
+  document.body.appendChild(starsCanvas)
+
+  const ctxStars = starsCanvas.getContext("2d")
+  let dpr = window.devicePixelRatio || 1
+
+  function resizeStarsCanvas() {
+    dpr = window.devicePixelRatio || 1
+    starsCanvas.width = window.innerWidth * dpr
+    starsCanvas.height = window.innerHeight * dpr
+    starsCanvas.style.width = window.innerWidth + "px"
+    starsCanvas.style.height = window.innerHeight + "px"
+    ctxStars.setTransform(1, 0, 0, 1, 0, 0)
+    ctxStars.scale(dpr, dpr)
   }
-  function drawStars() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    stars.forEach((s) => {
-      s.alpha += s.dAlpha
-      if (s.alpha > 1) {
-        s.alpha = 1
-        s.dAlpha *= -1
-      }
-      if (s.alpha < 0) {
-        s.alpha = 0
-        s.dAlpha *= -1
-      }
-      ctx.beginPath()
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(255,255,255,${s.alpha})`
-      ctx.fill()
-    })
-    if (Math.random() < 0.003) {
-      shootingStars.push({
+  window.addEventListener("resize", resizeStarsCanvas)
+  resizeStarsCanvas()
+
+  // Camadas de estrelas
+  const layers = [
+    { count: 40, speed: 0.09, size: 0.7, alphaRange: [0.2, 0.5], stars: [] },
+    { count: 30, speed: 0.1, size: 1.1, alphaRange: [0.3, 0.7], stars: [] },
+    { count: 20, speed: 0.4, size: 1.9, alphaRange: [0.5, 1], stars: [] },
+  ]
+
+  layers.forEach((layer) => {
+    for (let i = 0; i < layer.count; i++) {
+      layer.stars.push({
         x: Math.random() * window.innerWidth,
-        y: 0,
-        len: Math.random() * 120 + 60,
-        speed: Math.random() * 10 + 6,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * layer.size + 0.5,
+        alpha:
+          Math.random() * (layer.alphaRange[1] - layer.alphaRange[0]) +
+          layer.alphaRange[0],
+        dAlpha: Math.random() * 0.01 + 0.005,
+        speed: layer.speed * (0.5 + Math.random()),
       })
     }
-    shootingStars.forEach((s, i) => {
-      s.x += s.speed
-      s.y += s.speed
-      ctx.beginPath()
-      ctx.moveTo(s.x, s.y)
-      ctx.lineTo(s.x - s.len, s.y - s.len)
-      ctx.strokeStyle = "rgba(255,255,255,0.75)"
-      ctx.lineWidth = 1.2
-      ctx.stroke()
-      if (s.x > window.innerWidth + 50 || s.y > window.innerHeight + 50)
-        shootingStars.splice(i, 1)
+  })
+
+  let scrollOffset = 0
+  window.addEventListener("scroll", () => {
+    scrollOffset = window.scrollY
+  })
+
+  function animateStars() {
+    // Limpa todo o canvas corretamente, sem deixar rastro
+    ctxStars.clearRect(0, 0, starsCanvas.width / dpr, starsCanvas.height / dpr)
+
+    layers.forEach((layer) => {
+      layer.stars.forEach((s) => {
+        s.y += s.speed
+        s.alpha += s.dAlpha
+        if (s.alpha > 1 || s.alpha < 0) s.dAlpha *= -1
+        if (s.y > window.innerHeight) {
+          s.y = 0
+          s.x = Math.random() * window.innerWidth
+        }
+        const xOffset = scrollOffset * layer.speed * 0.2
+        const x = (s.x + xOffset) % window.innerWidth
+        ctxStars.beginPath()
+        ctxStars.arc(x, s.y, s.r, 0, Math.PI * 2)
+        ctxStars.fillStyle = `rgba(255,255,255,${s.alpha})`
+        ctxStars.fill()
+      })
     })
-    requestAnimationFrame(drawStars)
+    requestAnimationFrame(animateStars)
   }
-  drawStars()
+  animateStars()
 
   /* ---------- STEPS ---------- */
   const steps = Array.from(document.querySelectorAll(".step"))
@@ -367,7 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function resizeAll() {
     resizeCanvas(particlesCanvas, pctx)
     resizeCanvas(warpCanvas, wctx)
-    resizeCanvas(canvas, ctx)
+    resizeStarsCanvas()
   }
   window.addEventListener("resize", resizeAll)
 })
