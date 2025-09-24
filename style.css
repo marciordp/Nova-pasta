@@ -151,7 +151,7 @@ button:hover{filter:brightness(.95)}
 
 .phone-frame{
   width:320px; 
-  height:610px;
+  height:595px;
   background: var(--glass-bg);
   border-radius:40px;
   border:4px solid #452b55;
