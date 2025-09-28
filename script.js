@@ -287,13 +287,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- FINALIZAR ---------- */
   const form = document.getElementById("declarationForm")
-  /* ---------- FINALIZAR (substitua apenas este bloco) ---------- */
-  /* ---------- FINALIZAR (substitua apenas este bloco) ---------- */
-  /* ---------- FINALIZAR (substitua apenas este bloco) ---------- */
+
+  /* ---------- FINALIZAR (MODIFICADO PARA ESTRELAS NO CELULAR) ---------- */
   form.addEventListener("submit", (e) => {
     e.preventDefault()
 
-    // Esconde a coluna do formulário
     const formSide = document.querySelector(".form-side")
     if (formSide) formSide.style.display = "none"
 
@@ -314,69 +312,87 @@ document.addEventListener("DOMContentLoaded", () => {
       overflow: "auto",
       padding: "20px",
     })
-
-    // *** Anexa o overlay ao body ANTES de criar o canvas de estrelas ***
     document.body.appendChild(full)
 
-    // cria canvas de estrelas dentro do overlay (agora o container tem dimensão)
-    ;(function createFinalStarsInOverlay(container) {
-      const canvas = document.createElement("canvas")
-      canvas.style.position = "absolute"
-      canvas.style.top = "0"
-      canvas.style.left = "0"
-      canvas.style.width = "100%"
-      canvas.style.height = "100%"
-      canvas.style.pointerEvents = "none"
-      canvas.style.zIndex = "1" // acima do gradiente, abaixo do card
-      // garante stacking context
-      if (!container.style.position) container.style.position = "relative"
-      container.appendChild(canvas)
-      const ctx = canvas.getContext("2d")
+    // Função que inicializa estrelas dentro do card
+    function initStarsInCard(cardElement) {
+      const starsCanvas = document.createElement("canvas")
+      starsCanvas.style.position = "fixed"
+      starsCanvas.style.top = "0"
+      starsCanvas.style.left = "0"
+      starsCanvas.style.width = "100%"
+      starsCanvas.style.height = "100%"
+      starsCanvas.style.pointerEvents = "none"
+      starsCanvas.style.zIndex = "0"
+      cardElement.style.position = "relative"
+      cardElement.appendChild(starsCanvas)
+      const ctx = starsCanvas.getContext("2d")
 
-      function resize() {
-        canvas.width = container.clientWidth
-        canvas.height = container.clientHeight
+      function resizeCanvas() {
+        starsCanvas.width = cardElement.offsetWidth
+        starsCanvas.height = cardElement.offsetHeight
       }
-      // redimensiona imediatamente e ao redimensionar a janela
-      resize()
-      window.addEventListener("resize", resize)
+      resizeCanvas()
+      window.addEventListener("resize", resizeCanvas)
 
-      const stars = []
-      const N = 80
-      for (let i = 0; i < N; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.2 + 0.3,
-          s: Math.random() * 0.6 + 0.2,
-        })
+      // CONFIGURAÇÃO DAS ESTRELAS
+      let stars = []
+      const NUM_STARS = 50
+
+      function createStars() {
+        stars = []
+        for (let i = 0; i < NUM_STARS; i++) {
+          stars.push({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            r: Math.random() * 1 + 0.5,
+            s: Math.random() * 0.1 + 0.04,
+            alpha: Math.random() * 0.5 + 0.2,
+            delta: Math.random() * 0.03 + 0.01,
+          })
+        }
       }
+
+      // Chame ao criar o canvas
+      createStars()
+
+      function resizeStarsCanvas() {
+        starsCanvas.width = window.innerWidth
+        starsCanvas.height = window.innerHeight
+        createStars() // recria as estrelas no tamanho correto
+      }
+      window.addEventListener("resize", resizeStarsCanvas)
+      resizeStarsCanvas()
 
       function animate() {
-        // se canvas ainda sem tamanho, tenta redimensionar (seguro)
-        if (!canvas.width || !canvas.height) resize()
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        ctx.fillStyle = "white"
+        ctx.clearRect(0, 0, starsCanvas.width, starsCanvas.height)
         stars.forEach((st) => {
+          st.alpha += st.delta
+          if (st.alpha > 1 || st.alpha < 0.4) st.delta *= -1
+
+          ctx.beginPath()
+          ctx.arc(st.x, st.y, st.r + 1.5, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(255,255,255,${st.alpha * 0.6})`
+          ctx.fill()
+
           ctx.beginPath()
           ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(255,255,255,1)`
           ctx.fill()
-          st.y += st.s
-          if (st.y > canvas.height) {
-            st.y = 0
-            st.x = Math.random() * canvas.width
+
+          st.y -= st.s
+          if (st.y < 0) {
+            st.y = starsCanvas.height
+            st.x = Math.random() * starsCanvas.width
           }
         })
         requestAnimationFrame(animate)
       }
       animate()
-    })(full)
+    }
 
-    // clona só o conteúdo do card (para remover a "moldura do celular")
     if (originalCard) {
       const cardClone = originalCard.cloneNode(true)
-
-      // garante que o card apareça acima das estrelas
       Object.assign(cardClone.style, {
         position: "relative",
         zIndex: "2",
@@ -388,7 +404,6 @@ document.addEventListener("DOMContentLoaded", () => {
         borderRadius: "16px",
       })
 
-      // atualiza textos no clone
       const cRecipient = cardClone.querySelector("#previewRecipient")
       const cSender = cardClone.querySelector("#previewSender")
       const cMessage = cardClone.querySelector("#previewMessage")
@@ -399,138 +414,69 @@ document.addEventListener("DOMContentLoaded", () => {
         cMessage.textContent =
           messageInput.value || "Sua mensagem aparecerá aqui..."
 
-      // renderiza slides dentro do clone (usa slideUrls do seu código original)
-      const cloneSlidesWrapper = cardClone.querySelector("#slidesWrapper")
-      if (cloneSlidesWrapper) {
-        cloneSlidesWrapper.innerHTML = ""
-        if (!slideUrls || slideUrls.length === 0) {
-          const empty = document.createElement("div")
-          empty.className = "slide"
-          empty.innerHTML = '<div style="color:#bdbdbd">Sem fotos</div>'
-          cloneSlidesWrapper.appendChild(empty)
-          cloneSlidesWrapper.style.transform = "translateX(0%)"
-        } else {
-          slideUrls.forEach((url) => {
-            const s = document.createElement("div")
-            s.className = "slide"
-            const img = document.createElement("img")
-            img.src = url
-            img.alt = "foto"
-            s.appendChild(img)
-            cloneSlidesWrapper.appendChild(s)
-          })
-          cloneSlidesWrapper.style.transform = "translateX(0%)"
-
-          // autoplay apenas para o clone
-          let cloneIndex = 0
-          const cloneInterval = setInterval(() => {
-            cloneIndex = (cloneIndex + 1) % slideUrls.length
-            cloneSlidesWrapper.style.transform = `translateX(${
-              -cloneIndex * 100
-            }%)`
-          }, 2500)
-          full._cloneInterval = cloneInterval
-        }
-      }
-
-      // atualiza timer no clone (se existir)
-      const cloneTimer = cardClone.querySelector("#timerText")
-      if (cloneTimer) {
-        function updateCloneTimer() {
-          if (!specialDate) {
-            cloneTimer.textContent = "00 anos 00 meses 00 dias 00:00:00"
-            return
-          }
-          const now = new Date()
-          const diff = specialDate - now
-          const c = computeDiffComponents(diff)
-          const text = `${c.years} anos ${c.months} meses ${
-            c.days
-          } dias ${String(c.hours).padStart(2, "0")}:${String(
-            c.minutes
-          ).padStart(2, "0")}:${String(c.seconds).padStart(2, "0")}`
-          cloneTimer.textContent =
-            c.sign >= 0 ? `Faltam: ${text}` : `Se passaram: ${text}`
-        }
-        updateCloneTimer()
-        full._timerInterval = setInterval(updateCloneTimer, 1000)
-      }
-
       full.appendChild(cardClone)
-    } else {
-      // fallback: clona a preview-side inteira
-      const fallback = previewSide ? previewSide.cloneNode(true) : null
-      if (fallback) {
-        fallback.style.width = "100%"
-        fallback.style.height = "100%"
-        fallback.classList.add("finalized")
-        full.appendChild(fallback)
-      }
-    }
 
-    // mantém atualização do preview original (se quiser guardar)
-    previewRecipient.textContent = recipientInput.value || "Nome da pessoa 💖"
-    previewSender.textContent = senderInput.value || "Você"
-    previewMessage.textContent =
-      messageInput.value || "Sua mensagem aparecerá aqui..."
-    renderSlides()
-    startSlides()
-    updateTimerDisplay()
-    if (timerInterval) clearInterval(timerInterval)
-    timerInterval = setInterval(updateTimerDisplay, 1000)
+      // inicializa estrelas dentro do clone do card
+      initStarsInCard(cardClone)
+    }
   })
 
   /* ---------- RESIZE ALL CANVAS ---------- */
   function resizeAll() {
     resizeCanvas(particlesCanvas, pctx)
     resizeCanvas(warpCanvas, wctx)
-    resizeStarsCanvas()
   }
   window.addEventListener("resize", resizeAll)
-})
 
+  /* ---------- ESTRELAS NO PREVIEW ---------- */
+  const previewCanvas = document.querySelector(".stars-preview")
+  if (previewCanvas) {
+    const ctx = previewCanvas.getContext("2d")
 
-// teste stars independentes 
+    function resizePreviewCanvas() {
+      previewCanvas.width = previewCanvas.offsetWidth
+      previewCanvas.height = previewCanvas.offsetHeight
+    }
+    resizePreviewCanvas()
+    window.addEventListener("resize", resizePreviewCanvas)
 
-document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.querySelector(".stars-preview")
-  if (!canvas) return
-  const ctx = canvas.getContext("2d")
+    const stars = []
+    const NUM_STARS = 30
+    for (let i = 0; i < NUM_STARS; i++) {
+      stars.push({
+        x: Math.random() * previewCanvas.width,
+        y: Math.random() * previewCanvas.height,
+        r: Math.random() * 1 + 0.5,
+        s: Math.random() * 0.1 + 0.04,
+        alpha: Math.random() * 0.5 + 0.2,
+        delta: Math.random() * 0.03 + 0.01,
+      })
+    }
 
-  function resizeCanvas() {
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
+    function animatePreviewStars() {
+      ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height)
+      stars.forEach((st) => {
+        st.alpha += st.delta
+        if (st.alpha > 1 || st.alpha < 0.4) st.delta *= -1
+
+        ctx.beginPath()
+        ctx.arc(st.x, st.y, st.r + 1.5, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(255,255,255,${st.alpha * 0.6})`
+        ctx.fill()
+
+        ctx.beginPath()
+        ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(255,255,255,1)`
+        ctx.fill()
+
+        st.y -= st.s
+        if (st.y > previewCanvas.height) {
+          st.y = 0
+          st.x = Math.random() * previewCanvas.width
+        }
+      })
+      requestAnimationFrame(animatePreviewStars)
+    }
+    animatePreviewStars()
   }
-  resizeCanvas()
-  window.addEventListener("resize", resizeCanvas)
-
-  // Configuração das estrelas
-  const stars = []
-  const numStars = 80 // quantidade só dentro do preview
-
-  for (let i = 0; i < numStars; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.2 + 0.3,
-      s: Math.random() * 0.6 + 0.2,
-    })
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = "white"
-    stars.forEach((star) => {
-      ctx.beginPath()
-      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2)
-      ctx.fill()
-      star.y += star.s
-      if (star.y > canvas.height) {
-        star.y = 0
-        star.x = Math.random() * canvas.width
-      }
-    })
-    requestAnimationFrame(animate)
-  }
-  animate()
 })
