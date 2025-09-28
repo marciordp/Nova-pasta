@@ -1,0 +1,148 @@
+/* PREVIEW SIDE (CELULAR) */
+.preview-side{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center;
+  perspective:1200px;
+}
+
+.phone-frame{
+  width:320px; 
+  height:595px;
+  background: var(--glass-bg);
+  border-radius:40px;
+  border:4px solid #452b55;
+  box-shadow: var(--card-shadow);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+
+.phone-notch{
+  width:60px; 
+  height:20px;
+  background: #452b55;
+  border-radius:10px;
+  position:absolute;
+  top:8px; 
+  left:50%; 
+  transform:translateX(-50%);
+  z-index:10;
+}
+
+.phone-content{
+  flex:1; 
+  padding:16px; 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  justify-content:flex-start;
+  overflow:hidden; 
+  text-align:center;
+}
+
+.phone-nav{
+  height:36px; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  gap:8px; 
+  margin-top:8px;
+}
+.phone-nav .nav-dot{
+  width:100px; 
+  height:10px; 
+  border-radius:5px; 
+  background:#452b55;
+}
+
+/* CARD */
+.card{
+  width:100%;
+  background: transparent;
+  border-radius: var(--card-radius);
+  padding:0;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.card h2{
+  font-family:"Dancing Script",cursive;
+  color:var(--accent);
+  margin:1rem 0 1px;
+  font-size:clamp(20px, 4vw, 28px);
+}
+.preview-message{
+  color: var(--dark);
+  margin: 1rem 0 0.75rem;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+.preview-from{
+  color:var(--muted); 
+  margin-top: 1rem;
+}
+
+/* SLIDESHOW */
+.slideshow-box{
+  width: 80%;
+  max-width: 200px;
+  aspect-ratio: 9.0225 / 14.083;
+  border-radius:12px;
+  overflow:hidden;
+  background: rgba(43,24,64,0.35);
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  backdrop-filter: blur(12px);
+  margin: 12px auto;
+}
+.slides-wrapper{
+  display:flex; 
+  height:100%; 
+  width:100%; 
+  transition: transform 700ms ease;
+}
+.slide{
+  flex:0 0 100%; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+}
+.slide img{
+  max-width:100%; 
+  max-height:100%; 
+  object-fit:contain; 
+  border-radius:8px;
+}
+
+/* estrelas dentro do celular */
+
+.phone-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.stars-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.phone-content,
+.phone-notch,
+.phone-nav {
+  position: relative;
+  z-index: 1; /* ficam acima das estrelas */
+}

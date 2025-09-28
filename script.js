@@ -136,86 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
   launchBtn.addEventListener("click", launchEvent)
   launchBtn.addEventListener("touchstart", launchEvent)
 
-  /* ---------- STARS-GERAL AVANÇADO ---------- */
-  /* ---------- STARS-GERAL CORRIGIDO ---------- */
-  const starsCanvas = document.createElement("canvas")
-  starsCanvas.id = "starsGeralCanvas"
-  starsCanvas.style.position = "fixed"
-  starsCanvas.style.top = "0"
-  starsCanvas.style.left = "0"
-  starsCanvas.style.width = "100%"
-  starsCanvas.style.height = "100%"
-  starsCanvas.style.pointerEvents = "none"
-  starsCanvas.style.zIndex = "0"
-  document.body.appendChild(starsCanvas)
-
-  const ctxStars = starsCanvas.getContext("2d")
-  let dpr = window.devicePixelRatio || 1
-
-  function resizeStarsCanvas() {
-    dpr = window.devicePixelRatio || 1
-    starsCanvas.width = window.innerWidth * dpr
-    starsCanvas.height = window.innerHeight * dpr
-    starsCanvas.style.width = window.innerWidth + "px"
-    starsCanvas.style.height = window.innerHeight + "px"
-    ctxStars.setTransform(1, 0, 0, 1, 0, 0)
-    ctxStars.scale(dpr, dpr)
-  }
-  window.addEventListener("resize", resizeStarsCanvas)
-  resizeStarsCanvas()
-
-  // Camadas de estrelas
-  const layers = [
-    { count: 17, speed: 0.05, size: 0.7, alphaRange: [0.2, 0.5], stars: [] },
-    { count: 13, speed: 0.08, size: 1.1, alphaRange: [0.3, 0.7], stars: [] },
-    { count: 8, speed: 0.1, size: 1.9, alphaRange: [0.5, 1], stars: [] },
-  ]
-
-  layers.forEach((layer) => {
-    for (let i = 0; i < layer.count; i++) {
-      layer.stars.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        r: Math.random() * layer.size + 0.5,
-        alpha:
-          Math.random() * (layer.alphaRange[1] - layer.alphaRange[0]) +
-          layer.alphaRange[0],
-        dAlpha: Math.random() * 0.01 + 0.005,
-        speed: layer.speed * (0.5 + Math.random()),
-      })
-    }
-  })
-
-  let scrollOffset = 0
-  window.addEventListener("scroll", () => {
-    scrollOffset = window.scrollY
-  })
-
-  function animateStars() {
-    // Limpa todo o canvas corretamente, sem deixar rastro
-    ctxStars.clearRect(0, 0, starsCanvas.width / dpr, starsCanvas.height / dpr)
-
-    layers.forEach((layer) => {
-      layer.stars.forEach((s) => {
-        s.y -= s.speed
-        s.alpha += s.dAlpha
-        if (s.alpha > 1 || s.alpha < 0) s.dAlpha *= -1
-        if (s.y > window.innerHeight) {
-          s.y = 0
-          s.x = Math.random() * window.innerWidth
-        }
-        const xOffset = scrollOffset * layer.speed * 0.2
-        const x = (s.x + xOffset) % window.innerWidth
-        ctxStars.beginPath()
-        ctxStars.arc(x, s.y, s.r, 0, Math.PI * 2)
-        ctxStars.fillStyle = `rgba(255,255,255,${s.alpha})`
-        ctxStars.fill()
-      })
-    })
-    requestAnimationFrame(animateStars)
-  }
-  animateStars()
-
   /* ---------- STEPS ---------- */
   const steps = Array.from(document.querySelectorAll(".step"))
   const stepDots = Array.from(document.querySelectorAll(".step-dot"))
@@ -367,14 +287,188 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- FINALIZAR ---------- */
   const form = document.getElementById("declarationForm")
+  /* ---------- FINALIZAR (substitua apenas este bloco) ---------- */
+  /* ---------- FINALIZAR (substitua apenas este bloco) ---------- */
+  /* ---------- FINALIZAR (substitua apenas este bloco) ---------- */
   form.addEventListener("submit", (e) => {
     e.preventDefault()
+
+    // Esconde a coluna do formulário
     const formSide = document.querySelector(".form-side")
-    const previewSide = document.querySelector(".preview-side")
-    const card = document.querySelector(".card")
     if (formSide) formSide.style.display = "none"
-    if (previewSide) previewSide.classList.add("finalized")
-    if (card) card.classList.add("finalized")
+
+    const previewSide = document.querySelector(".preview-side")
+    const originalCard = document.querySelector(".card")
+
+    // cria overlay full-screen
+    const full = document.createElement("div")
+    full.id = "fullScreenPreview"
+    Object.assign(full.style, {
+      position: "fixed",
+      inset: "0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: "99999",
+      background: "linear-gradient(180deg,#07030c,#1e0f33)",
+      overflow: "auto",
+      padding: "20px",
+    })
+
+    // *** Anexa o overlay ao body ANTES de criar o canvas de estrelas ***
+    document.body.appendChild(full)
+
+    // cria canvas de estrelas dentro do overlay (agora o container tem dimensão)
+    ;(function createFinalStarsInOverlay(container) {
+      const canvas = document.createElement("canvas")
+      canvas.style.position = "absolute"
+      canvas.style.top = "0"
+      canvas.style.left = "0"
+      canvas.style.width = "100%"
+      canvas.style.height = "100%"
+      canvas.style.pointerEvents = "none"
+      canvas.style.zIndex = "1" // acima do gradiente, abaixo do card
+      // garante stacking context
+      if (!container.style.position) container.style.position = "relative"
+      container.appendChild(canvas)
+      const ctx = canvas.getContext("2d")
+
+      function resize() {
+        canvas.width = container.clientWidth
+        canvas.height = container.clientHeight
+      }
+      // redimensiona imediatamente e ao redimensionar a janela
+      resize()
+      window.addEventListener("resize", resize)
+
+      const stars = []
+      const N = 80
+      for (let i = 0; i < N; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.2 + 0.3,
+          s: Math.random() * 0.6 + 0.2,
+        })
+      }
+
+      function animate() {
+        // se canvas ainda sem tamanho, tenta redimensionar (seguro)
+        if (!canvas.width || !canvas.height) resize()
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = "white"
+        stars.forEach((st) => {
+          ctx.beginPath()
+          ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2)
+          ctx.fill()
+          st.y += st.s
+          if (st.y > canvas.height) {
+            st.y = 0
+            st.x = Math.random() * canvas.width
+          }
+        })
+        requestAnimationFrame(animate)
+      }
+      animate()
+    })(full)
+
+    // clona só o conteúdo do card (para remover a "moldura do celular")
+    if (originalCard) {
+      const cardClone = originalCard.cloneNode(true)
+
+      // garante que o card apareça acima das estrelas
+      Object.assign(cardClone.style, {
+        position: "relative",
+        zIndex: "2",
+        width: "min(92vw, 900px)",
+        maxHeight: "94vh",
+        overflow: "auto",
+        padding: "28px",
+        boxSizing: "border-box",
+        borderRadius: "16px",
+      })
+
+      // atualiza textos no clone
+      const cRecipient = cardClone.querySelector("#previewRecipient")
+      const cSender = cardClone.querySelector("#previewSender")
+      const cMessage = cardClone.querySelector("#previewMessage")
+      if (cRecipient)
+        cRecipient.textContent = recipientInput.value || "Nome da pessoa 💖"
+      if (cSender) cSender.textContent = senderInput.value || "Você"
+      if (cMessage)
+        cMessage.textContent =
+          messageInput.value || "Sua mensagem aparecerá aqui..."
+
+      // renderiza slides dentro do clone (usa slideUrls do seu código original)
+      const cloneSlidesWrapper = cardClone.querySelector("#slidesWrapper")
+      if (cloneSlidesWrapper) {
+        cloneSlidesWrapper.innerHTML = ""
+        if (!slideUrls || slideUrls.length === 0) {
+          const empty = document.createElement("div")
+          empty.className = "slide"
+          empty.innerHTML = '<div style="color:#bdbdbd">Sem fotos</div>'
+          cloneSlidesWrapper.appendChild(empty)
+          cloneSlidesWrapper.style.transform = "translateX(0%)"
+        } else {
+          slideUrls.forEach((url) => {
+            const s = document.createElement("div")
+            s.className = "slide"
+            const img = document.createElement("img")
+            img.src = url
+            img.alt = "foto"
+            s.appendChild(img)
+            cloneSlidesWrapper.appendChild(s)
+          })
+          cloneSlidesWrapper.style.transform = "translateX(0%)"
+
+          // autoplay apenas para o clone
+          let cloneIndex = 0
+          const cloneInterval = setInterval(() => {
+            cloneIndex = (cloneIndex + 1) % slideUrls.length
+            cloneSlidesWrapper.style.transform = `translateX(${
+              -cloneIndex * 100
+            }%)`
+          }, 2500)
+          full._cloneInterval = cloneInterval
+        }
+      }
+
+      // atualiza timer no clone (se existir)
+      const cloneTimer = cardClone.querySelector("#timerText")
+      if (cloneTimer) {
+        function updateCloneTimer() {
+          if (!specialDate) {
+            cloneTimer.textContent = "00 anos 00 meses 00 dias 00:00:00"
+            return
+          }
+          const now = new Date()
+          const diff = specialDate - now
+          const c = computeDiffComponents(diff)
+          const text = `${c.years} anos ${c.months} meses ${
+            c.days
+          } dias ${String(c.hours).padStart(2, "0")}:${String(
+            c.minutes
+          ).padStart(2, "0")}:${String(c.seconds).padStart(2, "0")}`
+          cloneTimer.textContent =
+            c.sign >= 0 ? `Faltam: ${text}` : `Se passaram: ${text}`
+        }
+        updateCloneTimer()
+        full._timerInterval = setInterval(updateCloneTimer, 1000)
+      }
+
+      full.appendChild(cardClone)
+    } else {
+      // fallback: clona a preview-side inteira
+      const fallback = previewSide ? previewSide.cloneNode(true) : null
+      if (fallback) {
+        fallback.style.width = "100%"
+        fallback.style.height = "100%"
+        fallback.classList.add("finalized")
+        full.appendChild(fallback)
+      }
+    }
+
+    // mantém atualização do preview original (se quiser guardar)
     previewRecipient.textContent = recipientInput.value || "Nome da pessoa 💖"
     previewSender.textContent = senderInput.value || "Você"
     previewMessage.textContent =
@@ -393,4 +487,50 @@ document.addEventListener("DOMContentLoaded", () => {
     resizeStarsCanvas()
   }
   window.addEventListener("resize", resizeAll)
+})
+
+
+// teste stars independentes 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.querySelector(".stars-preview")
+  if (!canvas) return
+  const ctx = canvas.getContext("2d")
+
+  function resizeCanvas() {
+    canvas.width = canvas.offsetWidth
+    canvas.height = canvas.offsetHeight
+  }
+  resizeCanvas()
+  window.addEventListener("resize", resizeCanvas)
+
+  // Configuração das estrelas
+  const stars = []
+  const numStars = 80 // quantidade só dentro do preview
+
+  for (let i = 0; i < numStars; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.2 + 0.3,
+      s: Math.random() * 0.6 + 0.2,
+    })
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = "white"
+    stars.forEach((star) => {
+      ctx.beginPath()
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2)
+      ctx.fill()
+      star.y += star.s
+      if (star.y > canvas.height) {
+        star.y = 0
+        star.x = Math.random() * canvas.width
+      }
+    })
+    requestAnimationFrame(animate)
+  }
+  animate()
 })

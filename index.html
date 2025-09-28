@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Declaração de Amor</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles/index.css">
 </head>
 <body>
   <!-- TELA INICIAL -->
@@ -77,13 +77,11 @@
             </div>
           </form>
         </section>
-
-        <!-- PREVIEW SIDE (CELULAR) -->
-        <section class="preview-side">
-          <div class="phone-frame">
-            <div class="phone-notch"></div>
-            <div class="phone-content">
-              <div class="card">
+        <div class="phone-frame">
+  <canvas class="stars-preview"></canvas>
+  <div class="phone-notch"></div>
+  <div class="phone-content">
+           <div class="card">
                 <h2 id="previewRecipient">Nome da pessoa 💖</h2>
                 <div class="slideshow-box">
                   <div class="slides-wrapper" id="slidesWrapper"></div>
@@ -98,7 +96,8 @@
             <div class="phone-nav">
               <div class="nav-dot"></div>
             </div>
-          </div>
+  </div>
+  
         </section>
       </main>
     </div>
