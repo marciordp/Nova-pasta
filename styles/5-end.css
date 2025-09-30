@@ -47,6 +47,7 @@
     order: -1; /* força o formulário sempre em cima */
     width: 90%;
     margin-bottom: 16px; /* dá espaço pro preview */
+    margin-top: 0.75rem;
   }
   .preview-side{
     order: 0; /* preview vem logo depois */

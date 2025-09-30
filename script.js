@@ -166,6 +166,25 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   )
 
+  /* ---- ENTER PARA AVANÇAR ---- */
+  const inputs = document.querySelectorAll(".step input, .step textarea")
+  inputs.forEach((input, idx) => {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault()
+        // Se não for o último step → avança
+        if (currentStep < steps.length - 1) {
+          currentStep++
+          showStep(currentStep)
+        } else {
+          // Último step → dispara submit
+          form.requestSubmit()
+        }
+      }
+    })
+  })
+
+
   /* ---------- PREVIEW TEXTS ---------- */
   const previewRecipient = document.getElementById("previewRecipient")
   const previewSender = document.getElementById("previewSender")
@@ -243,47 +262,61 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSlides()
 
   /* ---------- TIMER ---------- */
-  const timerText = document.getElementById("timerText")
-  let specialDate = null,
-    timerInterval = null
-  function computeDiffComponents(diffMs) {
-    const sign = diffMs >= 0 ? 1 : -1
-    let ms = Math.abs(diffMs)
-    const years = Math.floor(ms / (1000 * 60 * 60 * 24 * 365))
-    ms -= years * 1000 * 60 * 60 * 24 * 365
-    const months = Math.floor(ms / (1000 * 60 * 60 * 24 * 30))
-    ms -= months * 1000 * 60 * 60 * 24 * 30
-    const days = Math.floor(ms / (1000 * 60 * 60 * 24))
-    ms -= days * 1000 * 60 * 60 * 24
-    const hours = Math.floor(ms / (1000 * 60 * 60))
-    ms -= hours * 1000 * 60 * 60
-    const minutes = Math.floor(ms / (1000 * 60))
-    ms -= minutes * 1000 * 60
-    const seconds = Math.floor(ms / 1000)
-    return { sign, years, months, days, hours, minutes, seconds }
-  }
-  function updateTimerDisplay() {
-    if (!specialDate) {
-      timerText.textContent = "00 anos 00 meses 00 dias 00:00:00"
-      return
-    }
-    const now = new Date()
-    const diff = specialDate - now
-    const c = computeDiffComponents(diff)
-    const text = `${c.years} anos ${c.months} meses ${c.days} dias ${String(
-      c.hours
-    ).padStart(2, "0")}:${String(c.minutes).padStart(2, "0")}:${String(
-      c.seconds
-    ).padStart(2, "0")}`
-    timerText.textContent =
-      c.sign >= 0 ? `Faltam: ${text}` : `Se passaram: ${text}`
-  }
-  document.getElementById("specialDate").addEventListener("change", (e) => {
-    specialDate = e.target.value ? new Date(e.target.value) : null
-    updateTimerDisplay()
-    if (timerInterval) clearInterval(timerInterval)
-    timerInterval = setInterval(updateTimerDisplay, 1000)
-  })
+ const timerText = document.getElementById("timerText")
+ let specialDate = null,
+   timerInterval = null
+
+ function computeDiffComponents(diffMs) {
+   const sign = diffMs >= 0 ? 1 : -1
+   let ms = Math.abs(diffMs)
+   const years = Math.floor(ms / (1000 * 60 * 60 * 24 * 365))
+   ms -= years * 1000 * 60 * 60 * 24 * 365
+   const months = Math.floor(ms / (1000 * 60 * 60 * 24 * 30))
+   ms -= months * 1000 * 60 * 60 * 24 * 30
+   const days = Math.floor(ms / (1000 * 60 * 60 * 24))
+   ms -= days * 1000 * 60 * 60 * 24
+   const hours = Math.floor(ms / (1000 * 60 * 60))
+   ms -= hours * 1000 * 60 * 60
+   const minutes = Math.floor(ms / (1000 * 60))
+   ms -= minutes * 1000 * 60
+   const seconds = Math.floor(ms / 1000)
+   return { sign, years, months, days, hours, minutes, seconds }
+ }
+
+ function updateTimerDisplay() {
+   if (!specialDate || isNaN(specialDate.getTime())) {
+     timerText.textContent = "00 anos 00 meses 00 dias 00:00:00"
+     return
+   }
+   const now = new Date()
+   const diff = specialDate - now
+   const c = computeDiffComponents(diff)
+   const text = `${c.years} anos ${c.months} meses ${c.days} dias ${String(
+     c.hours
+   ).padStart(2, "0")}:${String(c.minutes).padStart(2, "0")}:${String(
+     c.seconds
+   ).padStart(2, "0")}`
+   timerText.textContent =
+     c.sign >= 0 ? `Faltam: ${text}` : `Se passaram: ${text}`
+ }
+
+ // Use "input" em vez de "change" para atualização imediata
+ document.getElementById("specialDate").addEventListener("input", (e) => {
+   const value = e.target.value
+   if (!value) {
+     specialDate = null
+     updateTimerDisplay()
+     return
+   }
+   const parsedDate = new Date(value)
+   if (!isNaN(parsedDate.getTime())) {
+     specialDate = parsedDate
+     updateTimerDisplay()
+     if (timerInterval) clearInterval(timerInterval)
+     timerInterval = setInterval(updateTimerDisplay, 1000)
+   }
+ })
+
 
   /* ---------- FINALIZAR ---------- */
   const form = document.getElementById("declarationForm")
