@@ -44,11 +44,11 @@
     align-items:center;
   }
   .form-side{
-    order:1;
+    order:2;
     width:90%;
   }
   .preview-side{
-    order:2;
+    order:1;
     width:90%;
     margin-top:16px;
   }
