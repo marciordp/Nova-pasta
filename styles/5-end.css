@@ -40,16 +40,16 @@
 /* RESPONSIVE */
 @media(max-width:900px){
   .container{
-    flex-direction:column;
-    align-items:center;
+    flex-direction: column;
+    align-items: center;
   }
   .form-side{
-    order:2;
-    width:90%;
+    order: -1; /* força o formulário sempre em cima */
+    width: 90%;
+    margin-bottom: 16px; /* dá espaço pro preview */
   }
   .preview-side{
-    order:1;
-    width:90%;
-    margin-top:16px;
+    order: 0; /* preview vem logo depois */
+    width: 90%;
   }
 }
