@@ -1,0 +1,76 @@
+/* PREVIEW SIDE (CELULAR) */
+.preview-side{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center;
+  perspective:1200px;
+}
+
+
+/* CARD */
+.card{
+  width:480px;
+
+  background: transparent;
+  border-radius: var(--card-radius);
+  padding:0;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  
+  
+}
+.card h2{
+  font-family:"Dancing Script",cursive;
+  color:var(--accent);
+  margin:2rem 0 2rem;
+  font-size:clamp(20px, 4vw, 28px);
+}
+
+.timer-row{
+padding-top: 1rem;
+}
+
+.preview-message{
+  color: var(--dark);
+  margin: 2rem 0 0.75rem;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+  font-size: 0.80rem;
+}
+.preview-from{
+  color:var(--muted); 
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+/* estrelas dentro do celular */
+
+.phone-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.stars-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.phone-content,
+.phone-notch,
+.phone-nav {
+  position: relative;
+  z-index: 1; /* ficam acima das estrelas */
+}

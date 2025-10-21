@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Declaração de Amor</title>
+  <link rel="stylesheet" href="../formulario e preview/styles/index.css">
+</head>
+<body>
+  <!-- TELA INICIAL -->
+  <div id="landingWrap">
+    <canvas id="launchParticles"></canvas>
+    <button id="launchBtn">Clique aqui</button>
+    <div id="circleExpand" aria-hidden="true"></div>
+  </div>
+
+  <!-- SITE REAL -->
+  <div id="appWrap">
+    <canvas id="starCanvas"></canvas>
+    <div class="app-wrap">
+      <main class="container">
+        <!-- FORM SIDE -->
+        <section class="form-side">
+          <div class="steps-indicator" id="stepsIndicator">
+            <div class="step-dot">1</div>
+            <div class="step-dot">2</div>
+            <div class="step-dot">3</div>
+            <div class="step-dot">4</div>
+            <div class="step-dot">5</div>
+            <div class="step-dot">6</div>
+          </div>
+
+          <form id="declarationForm" autocomplete="off">
+            <div class="step active">
+              <label class="color-name">Seu nome</label>
+              <input id="senderName" type="text">
+              <div class="btn-group">
+                <button type="button" class="next-btn">Próximo</button>
+              </div>
+            </div>
+
+            <div class="step">
+              <label>Nome da pessoa amada</label>
+              <input id="recipientName" type="text">
+              <div class="btn-group">
+                <button type="button" class="prev-btn">Anterior</button>
+                <button type="button" class="next-btn">Próximo</button>
+              </div>
+            </div>
+
+            <div class="step">
+              <label>Declaração</label>
+              <textarea id="message" rows="4"></textarea>
+              <div class="btn-group">
+                <button type="button" class="prev-btn">Anterior</button>
+                <button type="button" class="next-btn">Próximo</button>
+              </div>
+            </div>
+
+            <div class="step">
+              <label>Data especial (ano-mês-dia)</label>
+              <input id="specialDate" type="date">
+              <div class="btn-group">
+                <button type="button" class="prev-btn">Anterior</button>
+                <button type="button" class="next-btn">Próximo</button>
+              </div>
+            </div>
+
+            <div class="step">
+              <label>Fotos (até 5)</label>
+              <input id="photos" type="file" accept="image/*" multiple>
+              <div class="btn-group">
+                <button type="button" class="prev-btn">Anterior</button>
+                <button type="button" class="next-btn">Próximo</button>
+              </div>
+            </div>
+
+            <div class="step">
+              <label>Link da música (YouTube)</label>
+              <input id="youtubeUrl" type="text" placeholder="https://www.youtube.com/watch?v=...">
+              <div class="btn-group">
+                <button type="button" class="prev-btn">Anterior</button>
+                <button type="submit" class="finish-btn">Finalizar</button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- PREVIEW DO LIVRO DENTRO DO CELULAR -->
+        <section class="preview-side">
+          <div class="phone-frame">
+            <canvas class="stars-preview"></canvas>
+            <div class="phone-notch"></div>
+
+            <div class="phone-content">
+              <div class="card">
+                <h2 id="previewRecipient">Nome da pessoa 💖</h2>
+
+                <!-- Aqui o livro é exibido em tamanho reduzido -->
+                 <div class="livro">
+                <iframe
+                  id="bookPreview"
+                  src="../livro/index.html"
+                  style="width: 700px; height: 290px; border: none; overflow: hidden;"
+                  scrolling="no">
+                </iframe>
+              </div>
+              
+                <div class="timer-row">
+                  <div id="timerText" class="timer-text">
+                    00 anos 00 meses 00 dias 00:00:00
+                  </div>
+                </div>
+
+                <p id="previewMessage" class="preview-message">
+                  Sua mensagem aparecerá aqui...
+                </p>
+                <p class="preview-from">De: <span id="previewSender">Você</span></p>
+              </div>
+            </div>
+
+            <div class="phone-nav">
+              <div class="nav-dot"></div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script src="../formulario e preview/script.js"></script>
+
+
+</body>
+</html>

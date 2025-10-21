@@ -1,0 +1,57 @@
+/* FINALIZADO */
+.preview-side.finalized .phone-frame{
+  width:auto;
+  height:auto;
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
+}
+.preview-side.finalized .preview-message {
+  max-width:28.125rem;
+}
+.preview-side.finalized .phone-content,
+.preview-side.finalized .card{
+  max-width:28.125rem;
+  max-height:90vh;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:16px;
+}
+
+/* Remove notch e navegação no finalizado */
+.preview-side.finalized .phone-notch,
+.preview-side.finalized .phone-nav{
+  display:none;
+}
+
+/* TIMER */
+.timer-row{
+  display:flex; 
+  justify-content:center; 
+  margin-bottom:12px;
+}
+.timer-text{
+  font-weight:700; 
+  color:var(--accent); 
+  font-size:14px;
+  padding-top: 5px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .container{
+    flex-direction: column;
+    align-items: center;
+  }
+  .form-side{
+    order: -1; /* força o formulário sempre em cima */
+    width: 90%;
+    margin-bottom: 16px; /* dá espaço pro preview */
+    margin-top: 0.75rem;
+  }
+  .preview-side{
+    order: 0; /* preview vem logo depois */
+    width: 90%;
+  }
+}
