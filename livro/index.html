@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flip Book</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../livro/style.css">
+
+
+    <!-- Script -->
+    <script src="../livro/script.js" defer></script>
+</head>
+
+<body>
+    <script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const modo = urlParams.get('modo');
+  if (modo === 'preview') {
+    document.body.classList.add('preview-mode');
+  } else {
+    document.body.classList.add('final-mode');
+  }
+</script>
+
+    <main>
+        <input class="input" type="checkbox" id="cover_checkbox">
+        <input class="input" type="checkbox" id="page1_checkbox">
+        <input class="input" type="checkbox" id="page2_checkbox">
+        <input class="input" type="checkbox" id="page3_checkbox">
+        <input class="input" type="checkbox" id="page4_checkbox">
+        <input class="input" type="checkbox" id="page5_checkbox">
+
+        <!-- Flip Book -->
+        <div id="flip_book">
+            <div class="front_cover">
+                <label for="cover_checkbox" id="cover"></label>
+            </div>
+
+            <div class="page" id="page1">
+                <div class="front_page">
+                    <label for="page1_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/front_page_edge_shading.webp" alt="">
+                    <img class="front_content" src="./assets/images/pages/page1.webp" alt="">
+                </div>
+
+                <div class="back_page">
+                    <label for="page1_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/back_page_edge_shading.webp" alt="">
+                    <img class="back_content" src="./assets/images/pages/page2.webp" alt="">
+                </div>
+            </div>
+
+            <div class="page" id="page2">
+                <div class="front_page">
+                    <label for="page2_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/front_page_edge_shading.webp" alt="">
+                    <img class="front_content" src="./assets/images/pages/page3.webp" alt="">
+                </div>
+
+                <div class="back_page">
+                    <label for="page2_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/back_page_edge_shading.webp" alt="">
+                    <img class="back_content" src="./assets/images/pages/page4.webp" alt="">
+                </div>
+            </div>
+
+            <div class="page" id="page3">
+                <div class="front_page">
+                    <label for="page3_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/front_page_edge_shading.webp" alt="">
+                    <img class="front_content" src="./assets/images/pages/page5.webp" alt="">
+                </div>
+
+                <div class="back_page">
+                    <label for="page3_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/back_page_edge_shading.webp" alt="">
+                    <img class="back_content" src="./assets/images/pages/page6.webp" alt="">
+                </div>
+            </div>
+
+            <div class="page" id="page4">
+                <div class="front_page">
+                    <label for="page4_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/front_page_edge_shading.webp" alt="">
+                    <img class="front_content" src="./assets/images/pages/page7.webp" alt="">
+                </div>
+
+                <div class="back_page">
+                    <label for="page4_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/back_page_edge_shading.webp" alt="">
+                    <img class="back_content" src="./assets/images/pages/page8.webp" alt="">
+                </div>
+            </div>
+
+            <div class="page" id="page5">
+                <div class="front_page">
+                    <label for="page5_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/front_page_edge_shading.webp" alt="">
+                    <img class="front_content" src="./assets/images/pages/page9.webp" alt="">
+                </div>
+
+                <div class="back_page">
+                    <label for="page5_checkbox"></label>
+                    <img class="edge_shading" src="./assets/images/back_page_edge_shading.webp" alt="">
+                    <img class="back_content" src="./assets/images/pages/page10.webp" alt="">
+                </div>
+            </div>
+
+            <div class="back_cover"></div>
+        </div>
+
+        <!-- Toggle mode button -->
+        <button id="toggle-mode-btn">
+            <i class="bi bi-moon-stars-fill"></i>
+        </button>
+
+    </main>
+</body>
+
+</html>
