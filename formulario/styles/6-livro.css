@@ -1,0 +1,20 @@
+.livro-frame {
+  width: 100%;
+  aspect-ratio: 7 / 3; /* mantém proporção parecida */
+  border: none;
+  overflow: hidden;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .livro-frame {
+    width: 100%;
+    aspect-ratio: 5 / 3;
+    transform: scale(1);
+  }
+
+  .phone-frame {
+    max-width: 360px;
+    width: 90%;
+  }
+}

@@ -2,202 +2,170 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 /* VARIABLES */
 :root {
-    --dark-color: rgb(2, 4, 8);
-    --dark-hover: rgba(255, 255, 255, 0.1);
-
-    --light-color: rgb(245, 245, 245);
-    --light-hover: rgba(0, 0, 0, 0.1);
+  --dark-color: rgb(2, 4, 8);
+  --dark-hover: rgba(255, 255, 255, 0.1);
+  --light-color: rgb(245, 245, 245);
+  --light-hover: rgba(0, 0, 0, 0.1);
 }
 
 label {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 /* GENERAL */
 body {
-    width: 100%;
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: monospace, sans-serif;
-    font-size: 0.5rem;
-    transition: background-color 0.3s;
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: monospace, sans-serif;
+  font-size: 0.5rem;
+  transition: background-color 0.3s;
+  overflow: hidden;
+  background: transparent;
 }
 
 body.light-mode {
-    color: var(--dark-color);
-    background-color: var(--light-color)
-}
-
-body.light-mode #toggle-mode-btn:hover {
-    background-color: var(--light-hover);
+  color: var(--dark-color);
+  background-color: var(--light-color);
 }
 
 body.dark-mode {
-    color: var(--light-color);
-    background-color: var(--dark-color);
-}
-
-body.dark-mode #toggle-mode-btn:hover {
-    background-color: var(--dark-hover);
-}
-
-a {
-    text-decoration: none;
-    color: var(--dark-color);
-}
-
-.input {
-    display: none;
+  color: var(--light-color);
+  background-color: var(--dark-color);
 }
 
 /* MAIN */
 #toggle-mode-btn {
-    width: 2rem;
-    height: 2rem;
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    background-color: transparent;
-    transition: background-color 0.3s;
-    cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  transition: background-color 0.3s;
+  cursor: pointer;
 }
 
-
-
-
-.warning-icons {
-    font-size: 10rem;
-}
-
-@media (max-width: 768px) {
-    #responsive-warning.show {
-        display: flex;
-    }
-}
-
-/* FLIP BOOK - TAMANHO REDUZIDO */
+/* FLIP BOOK BASE */
 #flip_book {
-    width: 14rem;
-    height: 19rem;
-    position: relative;
-    transition-duration: 1s;
-    perspective: 1500px;
+  width: 14rem;
+  height: 18rem;
+  position: relative;
+  transition-duration: 1s;
+  perspective: 1500px;
 }
 
 .front_cover,
 .back_cover {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 2px 4px 4px 2px;
-    background-image: url(./assets/images/flip_book_edge_shading.webp);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: rgb(220, 20, 60);
-    box-shadow: 0 0 4px 0 rgba(25, 25, 25, 0.25);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px 4px 4px 2px;
+  background-image: url(./assets/images/flip_book_edge_shading.webp);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgb(220, 20, 60);
+  box-shadow: 0 0 4px 0 rgba(25, 25, 25, 0.25);
 }
 
 .front_cover {
-    position: absolute;
-    cursor: pointer;
-    transform-origin: center left;
-    transition: transform 0.5s;
-    z-index: 99;
+  position: absolute;
+  cursor: pointer;
+  transform-origin: center left;
+  transition: transform 0.5s;
+  z-index: 99;
 }
 
 .front_cover label {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    cursor: pointer;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  cursor: pointer;
 }
 
 .page {
-    width: 13.5rem;
-    height: 15.5rem;
-    position: absolute;
-    top: 12px;
-    left: 1px;
-    border-radius: 0 4px 4px 0;
-    background-color: white;
-    transform-origin: left;
-    transform-style: preserve-3d;
-    transform: rotateY(0deg);
-    transition-duration: 0.5s;
+  width: 13.5rem;
+  height: 18.5rem;
+  position: absolute;
+  top: 2px;
+  
+  left: 1px;
+  border-radius: 0 4px 4px 0;
+  background-color: white;
+  transform-origin: left;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition-duration: 0.5s;
 }
 
 .front_page,
 .back_page {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
 }
 
 .front_page label,
 .back_page label {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    cursor: pointer;
-    z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  cursor: pointer;
+  z-index: 100;
 }
 
 .back_page {
-    transform: rotateY(180deg);
-    z-index: 100;
+  transform: rotateY(180deg);
+  z-index: 100;
 }
 
 .edge_shading {
-    width: 14rem;
-    height: 17.5rem;
-    position: absolute;
-    z-index: 98;
+  width: 14rem;
+  height: 17.5rem;
+  position: absolute;
+  z-index: 98;
 }
 
-.front_content {
-    width: 13.5rem;
-    height: 17.5rem;
-    position: absolute;
-    top: 1px;
-    border-radius: 0 4px 4px 0;
-    z-index: 97;
+.front_content,
+.back_content {
+  width: 13.5rem;
+  height: 11.5rem;
+  position: absolute;
+  top: 1px;
+  border-radius: 0 4px 4px 0;
+  z-index: 97;
 }
 
 .back_content {
-    width: 13.5rem;
-    height: 17.5rem;
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    border-radius: 4px 0 0 4px;
-    z-index: 97;
+  left: 1px;
+  border-radius: 4px 0 0 4px;
 }
 
 .back_cover {
-    position: relative;
-    z-index: -1;
+  position: relative;
+  z-index: -1;
 }
 
 /* Z-INDEX (ordem das páginas) */
@@ -209,54 +177,78 @@ a {
 
 /* ANIMAÇÕES DE VIRAR PÁGINA */
 #cover_checkbox:checked ~ #flip_book {
-    transform: translateX(108px);
+  transform: translateX(60px);
 }
 
 #cover_checkbox:checked ~ #flip_book .front_cover {
-    transform: rotateY(-180deg);
-    transition: transform 1.5s, z-index 0.5s 0.5s;
-    z-index: 1;
+  transform: rotateY(-180deg);
+  transition: transform 1.5s, z-index 0.5s 0.5s;
+  z-index: 1;
 }
 
-#page1_checkbox:checked ~ #flip_book #page1 {
-    transform: rotateY(-180deg);
-    z-index: 3;
+#page1_checkbox:checked ~ #flip_book #page1 { transform: rotateY(-180deg); z-index: 3; }
+#page2_checkbox:checked ~ #flip_book #page2 { transform: rotateY(-180deg); z-index: 4; }
+#page3_checkbox:checked ~ #flip_book #page3 { transform: rotateY(-180deg); z-index: 5; }
+#page4_checkbox:checked ~ #flip_book #page4 { transform: rotateY(-180deg); z-index: 6; }
+#page5_checkbox:checked ~ #flip_book #page5 { transform: rotateY(-180deg); z-index: 9; }
+
+/* ========== CORREÇÃO VISUAL DO LIVRO NO PREVIEW ========== */
+
+/* Oculta os checkboxes das páginas (os quadradinhos feios) */
+.input[type="checkbox"] {
+  display: none !important;
 }
 
-#page2_checkbox:checked ~ #flip_book #page2 {
-    transform: rotateY(-180deg);
-    z-index: 4;
+/* Preview dentro do celular */
+body.preview-mode #flip_book {
+  width: 150px;
+  height: 200px;
+  margin: -60px auto 0 auto; /* 🔹 sobe um pouco pra não cobrir o timer */
+  transform: translateY(0) scale(1);
+  transform-origin: center center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  perspective: 1200px;
 }
 
-#page3_checkbox:checked ~ #flip_book #page3 {
-    transform: rotateY(-180deg);
-    z-index: 5;
+/* Livro aberto — centraliza e dá leve zoom */
+body.preview-mode.book-aberto #flip_book {
+  transform: translateY(-12px) scale(1.04);
 }
 
-#page4_checkbox:checked ~ #flip_book #page4 {
-    transform: rotateY(-180deg);
-    z-index: 6;
-}
-
-#page5_checkbox:checked ~ #flip_book #page5 {
-    transform: rotateY(-180deg);
-    z-index: 9;
-}
-/* ===== DIFERENTES TAMANHOS DO LIVRO ===== */
-.preview-livro #flip_book {
-  transform: scale(0.5);
-  transform-origin: top center;
-  width: 200px;
-  height: auto;
-  margin: 0 auto;
-}
-
-.resultado-livro #flip_book {
-  transform: scale(1);
-  transform-origin: top center;
-  width: 600px;
-  height: auto;
+/* Resultado final (modo tela cheia) */
+body.final-mode #flip_book {
+  width: 520px;
+  height: 700px;
   margin: 20px auto;
-  transition: transform 0.5s ease, width 0.5s ease;
+  transform: none;
+  perspective: 1500px;
 }
 
+/* Corrige páginas internas para centralizar corretamente */
+.page,
+.front_cover,
+.back_cover,
+.front_content,
+.back_content {
+  width: 100%;
+  height: 100%;
+  transform-origin: center left;
+}
+
+/* Quando aberto, o livro centraliza visualmente no meio do celular */
+body.preview-mode.book-aberto #flip_book {
+  transform: translateY(-15px) scale(1.05);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Ajuste de overflow (impede corte das páginas) */
+.phone-content {
+  overflow: visible !important;
+}
+
+.page img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

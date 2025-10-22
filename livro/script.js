@@ -1,43 +1,40 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Detecta automaticamente se está no preview (iframe)
-  let isPreview = false
-  try {
-    isPreview = window.self !== window.top
-  } catch (e) {
-    isPreview = true
-  }
+  // Detecta modo (preview ou final)
+  const urlParams = new URLSearchParams(window.location.search);
+  const modo = urlParams.get("modo");
+  const flipBook = document.getElementById("flip_book");
+  const coverCheckbox = document.getElementById("cover_checkbox");
 
-  if (isPreview) {
-    document.body.classList.add("preview-mode")
-    document.body.classList.remove("final-mode")
+  if (!flipBook) return;
+
+  // Define modo
+  if (modo === "preview") {
+    document.body.classList.add("preview-mode");
+    document.body.classList.remove("final-mode");
   } else {
-    document.body.classList.add("final-mode")
-    document.body.classList.remove("preview-mode")
+    document.body.classList.add("final-mode");
+    document.body.classList.remove("preview-mode");
   }
 
-  // Resto do seu código do livro (sem mexer)
-  const container = document.getElementById("livro-container-inner")
-  const paginas = container.querySelectorAll(".livro-pagina")
-  const btnPrev = container.querySelector("#livro-prev")
-  const btnNext = container.querySelector("#livro-next")
+  // Garante visibilidade
+  flipBook.classList.add("livro-visivel");
 
-  let paginaAtual = 0
-
-  function mostrarPagina(index) {
-    paginas.forEach((p, i) => {
-      p.classList.toggle("active", i === index)
-    })
+  // Abertura da capa = centralização + leve zoom
+  if (coverCheckbox) {
+    coverCheckbox.addEventListener("change", () => {
+      if (modo === "preview") {
+        if (coverCheckbox.checked) {
+          document.body.classList.add("book-aberto");
+        } else {
+          document.body.classList.remove("book-aberto");
+        }
+      }
+    });
   }
 
-  btnPrev.addEventListener("click", () => {
-    paginaAtual = (paginaAtual - 1 + paginas.length) % paginas.length
-    mostrarPagina(paginaAtual)
-  })
-
-  btnNext.addEventListener("click", () => {
-    paginaAtual = (paginaAtual + 1) % paginas.length
-    mostrarPagina(paginaAtual)
-  })
-
-  mostrarPagina(paginaAtual)
-})
+  // Força redesenho 3D leve nas páginas
+  const inputs = document.querySelectorAll("input[type='checkbox']");
+  inputs.forEach((input) => {
+    input.addEventListener("change", () => flipBook.getBoundingClientRect());
+  });
+});

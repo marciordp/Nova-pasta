@@ -5,6 +5,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (saved && container) {
     container.innerHTML = saved;
+
+    // Ajuste automático do livro após carregar
+    setTimeout(() => {
+      const iframe = container.querySelector("iframe");
+      if (iframe) {
+        iframe.style.width = "100%";
+        iframe.style.maxWidth = "900px";
+        iframe.style.aspectRatio = window.innerWidth < 768 ? "5 / 4" : "16 / 9";
+        iframe.style.border = "none";
+        iframe.style.display = "block";
+        iframe.style.margin = "0 auto";
+      }
+    }, 200);
+
   } else {
     container.innerHTML = "<h2>Nenhum resultado encontrado.</h2>";
   }
