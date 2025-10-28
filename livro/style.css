@@ -63,15 +63,19 @@ body.dark-mode {
   cursor: pointer;
 }
 
-/* FLIP BOOK BASE */
+/* ====================================================== */
+/* ====================== FLIP BOOK ====================== */
+/* ====================================================== */
+
 #flip_book {
-  width: 14rem;
-  height: 18rem;
+  width: 11.5rem;   /* 🔹 antes 14rem */
+  height: 18rem;    /* 🔹 antes 18rem */
   position: relative;
   transition-duration: 1s;
   perspective: 1500px;
 }
 
+/* CAPAS */
 .front_cover,
 .back_cover {
   width: 100%;
@@ -104,13 +108,13 @@ body.dark-mode {
   cursor: pointer;
 }
 
+/* PÁGINAS */
 .page {
-  width: 13.5rem;
-  height: 18.5rem;
+  width: 11rem;    /* 🔹 antes 13.5rem */
+  height: 10.5rem; /* 🔹 antes 18.5rem */
   position: absolute;
-  top: 2px;
-  
-  left: 1px;
+  top: 1px;        /* 🔹 centralizado dentro da capa */
+  left: 0px;
   border-radius: 0 4px 4px 0;
   background-color: white;
   transform-origin: left;
@@ -141,19 +145,20 @@ body.dark-mode {
   z-index: 100;
 }
 
+/* CONTEÚDO DAS PÁGINAS */
 .edge_shading {
-  width: 14rem;
-  height: 17.5rem;
+  width: 11.5rem;
+  height: 14rem;
   position: absolute;
   z-index: 98;
 }
 
 .front_content,
 .back_content {
-  width: 13.5rem;
-  height: 11.5rem;
+  width: 11rem;
+  height: 10rem;
   position: absolute;
-  top: 1px;
+  top: -1px;
   border-radius: 0 4px 4px 0;
   z-index: 97;
 }
@@ -163,6 +168,7 @@ body.dark-mode {
   border-radius: 4px 0 0 4px;
 }
 
+/* CAPA TRASEIRA */
 .back_cover {
   position: relative;
   z-index: -1;
@@ -177,7 +183,7 @@ body.dark-mode {
 
 /* ANIMAÇÕES DE VIRAR PÁGINA */
 #cover_checkbox:checked ~ #flip_book {
-  transform: translateX(60px);
+  transform: translateX(60px); /* 🔹 movimento lateral ajustado */
 }
 
 #cover_checkbox:checked ~ #flip_book .front_cover {
@@ -192,40 +198,41 @@ body.dark-mode {
 #page4_checkbox:checked ~ #flip_book #page4 { transform: rotateY(-180deg); z-index: 6; }
 #page5_checkbox:checked ~ #flip_book #page5 { transform: rotateY(-180deg); z-index: 9; }
 
-/* ========== CORREÇÃO VISUAL DO LIVRO NO PREVIEW ========== */
+/* ====================================================== */
+/* ===================== PREVIEW FIX ===================== */
+/* ====================================================== */
 
-/* Oculta os checkboxes das páginas (os quadradinhos feios) */
+/* Oculta os checkboxes das páginas */
 .input[type="checkbox"] {
   display: none !important;
 }
 
 /* Preview dentro do celular */
 body.preview-mode #flip_book {
-  width: 151px;
-  height: 201px;
-  margin: -60px auto 0 auto; /* 🔹 sobe um pouco pra não cobrir o timer */
+  width: 125px;   /* 🔹 antes 151px */
+  height: 165px;  /* 🔹 antes 201px */
+  margin: -45px auto 0 auto; /* 🔹 sobe, mas não demais */
   transform: translateY(0) scale(1);
   transform-origin: center center;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   perspective: 1200px;
 }
 
-
 /* Livro aberto — centraliza e dá leve zoom */
 body.preview-mode.book-aberto #flip_book {
-  transform: translateY(-12px) scale(1.04);
+  transform: translateY(-10px) scale(1.04);
 }
 
 /* Resultado final (modo tela cheia) */
 body.final-mode #flip_book {
-  width: 520px;
-  height: 700px;
+  width: 480px;   /* 🔹 proporcional à redução */
+  height: 640px;
   margin: 20px auto;
   transform: none;
   perspective: 1500px;
 }
 
-/* Corrige páginas internas para centralizar corretamente */
+/* Corrige páginas internas */
 .page,
 .front_cover,
 .back_cover,
@@ -236,21 +243,22 @@ body.final-mode #flip_book {
   transform-origin: center left;
 }
 
-/* Quando aberto, o livro centraliza visualmente no meio do celular */
+/* Centralização do livro aberto */
 body.preview-mode.book-aberto #flip_book {
-  transform: translateY(-15px) scale(1.05);
+  transform: translateY(-12px) scale(1.05);
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Ajuste de overflow (impede corte das páginas) */
+/* Evita corte no preview */
 .phone-content {
   overflow: visible !important;
 }
 
+/* Imagens dentro das páginas */
 .page img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  margin: 0px;
+  margin: 0;
 }
