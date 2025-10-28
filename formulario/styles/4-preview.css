@@ -71,7 +71,7 @@
 .card h2{
   font-family:"Dancing Script",cursive;
   color:var(--accent);
-  margin:1rem 0 4px;
+  margin:4rem 0 0px;
   font-size:clamp(20px, 4vw, 28px);
 }
 .preview-message{
@@ -89,7 +89,7 @@
 }
 .preview-from{
   color:var(--muted); 
-  margin-top: 1rem;
+  margin-top: 8rem;
   font-size: 0.85rem;
 }
 
@@ -116,3 +116,9 @@
   position: relative;
   z-index: 1; /* ficam acima das estrelas */
 }
+
+.phone-nav{
+  margin-top: 0rem;
+}
+
+/* RESPONSIVE */

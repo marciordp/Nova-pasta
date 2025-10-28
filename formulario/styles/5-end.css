@@ -29,6 +29,7 @@
 .timer-row{
   display:flex; 
   justify-content:center; 
+  margin-top: 1rem;
   margin-bottom:12px;
 }
 .timer-text{
