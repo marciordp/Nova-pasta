@@ -63,6 +63,8 @@ body {
   z-index: 0;
 }
 
-.final.mode{
-  
+/* EFEITO DE ZOOM DO RESULTADO FINAL */
+#finalContent {
+  transform-origin: center center;
+  transition: transform 1.2s ease;
 }

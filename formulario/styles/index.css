@@ -7,3 +7,149 @@
 @import url(../styles/6-livro.css);
 @import url(../styles/background.css);
 
+/* ========================= */
+/*  🔹 RESPONSIVIDADE GERAL  */
+/* ========================= */
+
+/* Tablets e celulares */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .form-side {
+    width: 90%;
+    max-width: 400px;
+    margin-bottom: 16px;
+    padding: 16px;
+  }
+
+  .preview-side {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .phone-frame {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9 / 18;
+    border-radius: 32px;
+    border-width: 3px;
+  }
+
+  .phone-content {
+    padding: 10px;
+  }
+
+  .card h2 {
+    font-size: clamp(18px, 5vw, 26px);
+    margin-top: 1.5rem;
+  }
+
+  .preview-message {
+    font-size: clamp(0.75rem, 2.5vw, 1rem);
+    margin-top: 0.75rem;
+  }
+
+  .preview-from {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+  }
+
+  button, .btn-group button {
+    font-size: 0.9rem;
+    padding: 10px 14px;
+  }
+
+  input, textarea {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}
+
+/* Celulares menores (<600px) */
+@media (max-width: 600px) {
+  body, html {
+    padding: 0;
+  }
+
+  .form-side {
+    width: 95%;
+    padding: 14px;
+  }
+
+  .preview-side {
+    width: 95%;
+  }
+
+  .phone-frame {
+    width: 100%;
+    border-radius: 28px;
+    border-width: 2px;
+  }
+
+  .card {
+    padding: 0;
+  }
+
+  .card h2 {
+    margin-top: 1rem;
+  }
+
+  #bookPreview,
+  iframe {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 55vh;
+  }
+
+  .timer-text {
+    font-size: 0.75rem;
+  }
+
+  .steps-indicator .step-dot {
+    width: 24px;
+    height: 24px;
+    font-size: 13px;
+  }
+
+  #launchBtn {
+    font-size: 18px;
+    padding: 12px 24px;
+  }
+}
+
+/* ============================== */
+/*  🔹 RESULTADO FINAL (CELULAR)  */
+/* ============================== */
+@media (max-width: 768px) {
+  #finalContent {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    transform: scale(1);
+    padding: 0 12px;
+  }
+
+  #finalContent iframe {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 5 / 4;
+    margin: 0 auto;
+  }
+
+  #finalContent .card h2 {
+    font-size: clamp(18px, 6vw, 24px);
+  }
+
+  #finalContent .preview-message {
+    font-size: 0.9rem;
+  }
+
+  #finalContent .preview-from {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+  }
+}
